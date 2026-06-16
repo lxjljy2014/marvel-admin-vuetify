@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
-import { AdminLayout, LAYOUT_SCROLL_EL_ID } from '@sa/materials';
-import type { LayoutMode } from '@sa/materials';
-import { useAppStore } from '../../stores/modules/app';
-import { useThemeStore } from '../../stores/modules/theme';
+import { useThemeStore } from '@/stores/modules/theme';
 import GlobalHeader from '../modules/global-header/index.vue';
 import GlobalSider from '../modules/global-sider/index.vue';
 import GlobalTab from '../modules/global-tab/index.vue';
@@ -16,17 +13,10 @@ defineOptions({
   name: 'BaseLayout'
 });
 
-const appStore = useAppStore();
 const themeStore = useThemeStore();
-const { secondLevelMenus, childLevelMenus, isActiveFirstLevelMenuHasChildren } = provideMixMenuContext();
+const { isActiveFirstLevelMenuHasChildren } = provideMixMenuContext();
 
 const GlobalMenu = defineAsyncComponent(() => import('../modules/global-menu/index.vue'));
-
-const layoutMode = computed(() => {
-  const vertical: LayoutMode = 'vertical';
-  const horizontal: LayoutMode = 'horizontal';
-  return themeStore.layout.mode.includes(vertical) ? vertical : horizontal;
-});
 
 const headerProps = computed(() => {
   const { mode } = themeStore.layout;
@@ -66,54 +56,6 @@ const headerProps = computed(() => {
 
   return headerPropsConfig[mode];
 });
-
-const siderVisible = computed(() => themeStore.layout.mode !== 'horizontal');
-
-const isVerticalMix = computed(() => themeStore.layout.mode === 'vertical-mix');
-
-const isVerticalHybridHeaderFirst = computed(() => themeStore.layout.mode === 'vertical-hybrid-header-first');
-
-const isTopHybridSidebarFirst = computed(() => themeStore.layout.mode === 'top-hybrid-sidebar-first');
-
-const isTopHybridHeaderFirst = computed(() => themeStore.layout.mode === 'top-hybrid-header-first');
-
-const siderWidth = computed(() => getSiderAndCollapsedWidth(false));
-
-const siderCollapsedWidth = computed(() => getSiderAndCollapsedWidth(true));
-
-function getSiderAndCollapsedWidth(isCollapsed: boolean) {
-  const {
-    mixChildMenuWidth,
-    collapsedWidth,
-    width: themeWidth,
-    mixCollapsedWidth,
-    mixWidth: themeMixWidth
-  } = themeStore.sider;
-
-  const width = isCollapsed ? collapsedWidth : themeWidth;
-  const mixWidth = isCollapsed ? mixCollapsedWidth : themeMixWidth;
-
-  if (isTopHybridHeaderFirst.value) {
-    return isActiveFirstLevelMenuHasChildren.value ? width : 0;
-  }
-
-  if (isVerticalHybridHeaderFirst.value && !isActiveFirstLevelMenuHasChildren.value) {
-    return 0;
-  }
-
-  const isMixMode = isVerticalMix.value || isTopHybridSidebarFirst.value || isVerticalHybridHeaderFirst.value;
-  let finalWidth = isMixMode ? mixWidth : width;
-
-  if (isVerticalMix.value && appStore.mixSiderFixed && secondLevelMenus.value.length) {
-    finalWidth += mixChildMenuWidth;
-  }
-
-  if (isVerticalHybridHeaderFirst.value && appStore.mixSiderFixed && childLevelMenus.value.length) {
-    finalWidth += mixChildMenuWidth;
-  }
-
-  return finalWidth;
-}
 </script>
 
 <template>
@@ -130,9 +72,3 @@ function getSiderAndCollapsedWidth(isCollapsed: boolean) {
     <GlobalFooter />
   </VApp>
 </template>
-
-<style lang="scss">
-#__SCROLL_EL_ID__ {
-  @include scrollbar();
-}
-</style>

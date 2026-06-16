@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { VNode } from 'vue';
-import { useTabStore } from '../../../stores/modules/tab';
-import { useSvgIcon } from '@/hooks/common/icon';
+import { useTabStore } from '@/stores/modules/tab';
 import { $t } from '@/locales';
 
 defineOptions({
@@ -27,12 +25,11 @@ const props = withDefaults(defineProps<Props>(), {
 const visible = defineModel<boolean>('visible');
 
 const { removeTab, clearTabs, clearLeftTabs, clearRightTabs, fixTab, unfixTab, isTabRetain, homeTab } = useTabStore();
-const { SvgIconVNode } = useSvgIcon();
 
 type DropdownOption = {
   key: App.Global.DropdownKey;
   label: string;
-  icon?: () => VNode;
+  icon?: string;
   disabled?: boolean;
 };
 
@@ -41,27 +38,27 @@ const options = computed(() => {
     {
       key: 'closeCurrent',
       label: $t('dropdown.closeCurrent'),
-      icon: SvgIconVNode({ icon: 'ant-design:close-outlined', fontSize: 18 })
+      icon: 'mdi-close'
     },
     {
       key: 'closeOther',
       label: $t('dropdown.closeOther'),
-      icon: SvgIconVNode({ icon: 'ant-design:column-width-outlined', fontSize: 18 })
+      icon: 'mdi-view-column'
     },
     {
       key: 'closeLeft',
       label: $t('dropdown.closeLeft'),
-      icon: SvgIconVNode({ icon: 'mdi:format-horizontal-align-left', fontSize: 18 })
+      icon: 'mdi-format-horizontal-align-left'
     },
     {
       key: 'closeRight',
       label: $t('dropdown.closeRight'),
-      icon: SvgIconVNode({ icon: 'mdi:format-horizontal-align-right', fontSize: 18 })
+      icon: 'mdi-format-horizontal-align-right'
     },
     {
       key: 'closeAll',
       label: $t('dropdown.closeAll'),
-      icon: SvgIconVNode({ icon: 'ant-design:line-outlined', fontSize: 18 })
+      icon: 'mdi-minus'
     }
   ];
 
@@ -70,13 +67,13 @@ const options = computed(() => {
       opts.push({
         key: 'unpin',
         label: $t('dropdown.unpin'),
-        icon: SvgIconVNode({ icon: 'mdi:pin-off-outline', fontSize: 18 })
+        icon: 'mdi-pin-off-outline'
       });
     } else {
       opts.push({
         key: 'pin',
         label: $t('dropdown.pin'),
-        icon: SvgIconVNode({ icon: 'mdi:pin-outline', fontSize: 18 })
+        icon: 'mdi-pin-outline'
       });
     }
   }
@@ -131,16 +128,22 @@ function handleDropdown(optionKey: App.Global.DropdownKey) {
 </script>
 
 <template>
-  <NDropdown
-    :show="visible"
-    placement="bottom-start"
-    trigger="manual"
-    :x="x"
-    :y="y"
-    :options="options"
-    @clickoutside="hideDropdown"
-    @select="handleDropdown"
-  />
+  <VMenu :model-value="visible" :target="[x, y]" location="bottom start" :offset="5" @update:model-value="hideDropdown">
+    <VList density="compact" nav prepend-gap="12">
+      <VListItem
+        v-for="option in options"
+        :key="option.key"
+        :disabled="option.disabled"
+        min-height="32"
+        @click="handleDropdown(option.key)"
+      >
+        <template #prepend>
+          <VIcon v-if="option.icon" :icon="option.icon" size="small" />
+        </template>
+        <VListItemTitle>{{ option.label }}</VListItemTitle>
+      </VListItem>
+    </VList>
+  </VMenu>
 </template>
 
 <style scoped></style>

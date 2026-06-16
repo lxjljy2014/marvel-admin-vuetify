@@ -6,6 +6,7 @@ import App from './App.vue';
 import 'unfonts.css';
 import 'virtual:uno.css';
 import './styles/main.scss';
+import '@/plugins/assets';
 
 const app = createApp(App);
 

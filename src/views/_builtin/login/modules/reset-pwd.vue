@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { computed, reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useRouterPush } from '@/hooks/common/router';
-import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
+import { useFormRules, useVuetifyForm } from '@/hooks/common/form';
 
 defineOptions({
   name: 'ResetPwd'
 });
 
 const { toggleLoginModule } = useRouterPush();
-const { formRef, validate } = useNaiveForm();
+const { valid, formRef, validate } = useVuetifyForm();
+const { formRules, createConfirmPwdRule } = useFormRules();
 
 interface FormModel {
   phone: string;
@@ -25,13 +26,13 @@ const model: FormModel = reactive({
   confirmPassword: ''
 });
 
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
 type RuleRecord = Partial<Record<keyof FormModel, App.Global.FormRule[]>>;
-
 const rules = computed<RuleRecord>(() => {
-  const { formRules, createConfirmPwdRule } = useFormRules();
-
   return {
     phone: formRules.phone,
+    code: formRules.code,
     password: formRules.pwd,
     confirmPassword: createConfirmPwdRule(model.password)
   };
@@ -39,44 +40,79 @@ const rules = computed<RuleRecord>(() => {
 
 async function handleSubmit() {
   await validate();
-  // request to reset password
-  window.$message?.success($t('page.login.common.validateSuccess'));
+  if (valid.value) {
+    window.$message?.success($t('page.login.common.validateSuccess'));
+  }
 }
 </script>
 
 <template>
-  <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
-    <NFormItem path="phone">
-      <NInput v-model:value="model.phone" :placeholder="$t('page.login.common.phonePlaceholder')" />
-    </NFormItem>
-    <NFormItem path="code">
-      <NInput v-model:value="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
-    </NFormItem>
-    <NFormItem path="password">
-      <NInput
-        v-model:value="model.password"
-        type="password"
-        show-password-on="click"
-        :placeholder="$t('page.login.common.passwordPlaceholder')"
-      />
-    </NFormItem>
-    <NFormItem path="confirmPassword">
-      <NInput
-        v-model:value="model.confirmPassword"
-        type="password"
-        show-password-on="click"
-        :placeholder="$t('page.login.common.confirmPasswordPlaceholder')"
-      />
-    </NFormItem>
-    <NSpace vertical :size="18" class="w-full">
-      <NButton type="primary" size="large" round block @click="handleSubmit">
+  <VForm ref="formRef" v-model="valid" @keyup.enter="handleSubmit">
+    <VTextField
+      v-model="model.phone"
+      :placeholder="$t('page.login.common.phonePlaceholder')"
+      label="手机号"
+      :rules="rules.phone"
+      variant="outlined"
+      density="comfortable"
+      prepend-inner-icon="mdi-phone"
+      class="mb-2"
+      color="primary"
+    />
+
+    <VTextField
+      v-model="model.code"
+      :placeholder="$t('page.login.common.codePlaceholder')"
+      label="验证码"
+      :rules="rules.code"
+      variant="outlined"
+      density="comfortable"
+      prepend-inner-icon="mdi-shield-key"
+      class="mb-2"
+      color="primary"
+    />
+
+    <VTextField
+      v-model="model.password"
+      :placeholder="$t('page.login.common.passwordPlaceholder')"
+      label="密码"
+      :rules="rules.password"
+      :type="showPassword ? 'text' : 'password'"
+      :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+      variant="outlined"
+      density="comfortable"
+      prepend-inner-icon="mdi-lock"
+      autocomplete="new-password"
+      class="mb-2"
+      color="primary"
+      @click:append-inner="showPassword = !showPassword"
+    />
+
+    <VTextField
+      v-model="model.confirmPassword"
+      :placeholder="$t('page.login.common.confirmPasswordPlaceholder')"
+      label="确认密码"
+      :rules="rules.confirmPassword"
+      :type="showConfirmPassword ? 'text' : 'password'"
+      :append-inner-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+      variant="outlined"
+      density="comfortable"
+      prepend-inner-icon="mdi-lock-check"
+      validate-on="input lazy"
+      class="mb-2"
+      color="primary"
+      @click:append-inner="showConfirmPassword = !showConfirmPassword"
+    />
+
+    <div class="flex flex-col gap-4">
+      <VBtn color="primary" size="large" rounded block @click="handleSubmit">
         {{ $t('common.confirm') }}
-      </NButton>
-      <NButton size="large" round block @click="toggleLoginModule('pwd-login')">
+      </VBtn>
+      <VBtn variant="text" border="sm" size="large" rounded block @click="toggleLoginModule('pwd-login')">
         {{ $t('page.login.common.back') }}
-      </NButton>
-    </NSpace>
-  </NForm>
+      </VBtn>
+    </div>
+  </VForm>
 </template>
 
 <style scoped></style>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import Clipboard from 'clipboard';
-import { useThemeStore } from '../../../../stores/modules/theme';
+import { useThemeStore } from '@/stores/modules/theme';
 import { $t } from '@/locales';
 
 defineOptions({
@@ -48,9 +48,11 @@ onMounted(() => {
 <template>
   <div class="w-full flex justify-between">
     <textarea id="themeConfigCopyTarget" v-model="dataClipboardText" class="absolute opacity-0 -z-1" />
-    <NButton type="error" ghost @click="handleReset">{{ $t('theme.configOperation.resetConfig') }}</NButton>
+    <VBtn variant="outlined" color="warning" @click="handleReset">
+      {{ $t('theme.configOperation.resetConfig') }}
+    </VBtn>
     <div ref="domRef" data-clipboard-target="#themeConfigCopyTarget">
-      <NButton type="primary">{{ $t('theme.configOperation.copyConfig') }}</NButton>
+      <VBtn color="primary">{{ $t('theme.configOperation.copyConfig') }}</VBtn>
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { PopoverPlacement } from 'naive-ui';
 import { $t } from '@/locales';
+import type { Anchor } from 'vuetify';
 
 defineOptions({ name: 'ThemeSchemaSwitch' });
 
@@ -11,7 +11,7 @@ interface Props {
   /** Show tooltip */
   showTooltip?: boolean;
   /** Tooltip placement */
-  tooltipPlacement?: PopoverPlacement;
+  tooltipPlacement?: Anchor;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -20,19 +20,19 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 interface Emits {
-  (e: 'switch'): void;
+  (e: 'switch', event: PointerEvent): void;
 }
 
 const emit = defineEmits<Emits>();
 
-function handleSwitch() {
-  emit('switch');
+function handleSwitch(event: PointerEvent) {
+  emit('switch', event);
 }
 
 const icons: Record<UnionKey.ThemeScheme, string> = {
-  light: 'material-symbols:sunny',
-  dark: 'material-symbols:nightlight-rounded',
-  auto: 'material-symbols:hdr-auto'
+  light: 'mdi-weather-sunny',
+  dark: 'mdi-weather-night',
+  auto: 'mdi-brightness-auto'
 };
 
 const icon = computed(() => icons[props.themeSchema]);
@@ -49,7 +49,7 @@ const tooltipContent = computed(() => {
     :icon="icon"
     :tooltip-content="tooltipContent"
     :tooltip-placement="tooltipPlacement"
-    @click="handleSwitch"
+    @click="handleSwitch($event)"
   />
 </template>
 

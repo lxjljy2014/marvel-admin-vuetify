@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useAppStore } from '../../../stores/modules/app';
+import { useAppStore } from '@/stores/modules/app';
 import { $t } from '@/locales';
 import AppearanceSettings from './modules/appearance/index.vue';
 import LayoutSettings from './modules/layout/index.vue';
@@ -18,7 +18,6 @@ const activeTab = ref('appearance');
 const drawerWidth = computed(() => {
   const width = 400;
 
-  // On mobile devices, use 90% of viewport width with a maximum of 400px
   if (appStore.isMobile) {
     return `min(90vw, ${width}px)`;
   }
@@ -28,39 +27,60 @@ const drawerWidth = computed(() => {
 </script>
 
 <template>
-  <NDrawer v-model:show="appStore.themeDrawerVisible" display-directive="show" :width="drawerWidth">
-    <NDrawerContent :title="$t('theme.themeDrawerTitle')" :native-scrollbar="false" closable>
-      <NTabs v-model:value="activeTab" type="segment" size="medium" class="mb-16px">
-        <NTab name="appearance" :tab="$t('theme.tabs.appearance')"></NTab>
-        <NTab name="layout" :tab="$t('theme.tabs.layout')"></NTab>
-        <NTab name="general" :tab="$t('theme.tabs.general')"></NTab>
-        <NTab name="preset" :tab="$t('theme.tabs.preset')"></NTab>
-      </NTabs>
-
-      <div class="min-h-400px">
-        <KeepAlive>
-          <AppearanceSettings v-if="activeTab === 'appearance'" />
-          <LayoutSettings v-else-if="activeTab === 'layout'" />
-          <GeneralSettings v-else-if="activeTab === 'general'" />
-          <PresetSettings v-else-if="activeTab === 'preset'" />
-        </KeepAlive>
-      </div>
-
-      <template #footer>
-        <ConfigOperation />
+  <VDefaultsProvider
+    :defaults="{
+      VTabs: { style: '--v-border-color: transparent' },
+      VTab: { class: 'text-none', ripple: false, minWidth: 60 },
+      VSwitch: { minWidth: 40, density: 'compact', hideDetails: true, color: 'primary' }
+    }"
+  >
+    <VNavigationDrawer
+      v-model="appStore.themeDrawerVisible"
+      :width="drawerWidth"
+      location="right"
+      temporary
+      @update:model-value="appStore.themeDrawerVisible = $event"
+    >
+      <template #prepend>
+        <VList>
+          <VListItem :title="$t('theme.themeDrawerTitle')">
+            <template #append>
+              <VIconBtn mdi-close variant="text" rounded="lg" @click="appStore.themeDrawerVisible = false">
+                <VIcon>mdi-close</VIcon>
+              </VIconBtn>
+            </template>
+          </VListItem>
+        </VList>
+        <VDivider></VDivider>
       </template>
-    </NDrawerContent>
-  </NDrawer>
+      <VSheet class="pa-4">
+        <VTabs v-model="activeTab" inset density="compact" fixed-tabs class="mb-4">
+          <VTab value="appearance">{{ $t('theme.tabs.appearance') }}</VTab>
+          <VTab value="layout">{{ $t('theme.tabs.layout') }}</VTab>
+          <VTab value="general">{{ $t('theme.tabs.general') }}</VTab>
+          <VTab value="preset">{{ $t('theme.tabs.preset') }}</VTab>
+        </VTabs>
+        <VTabsWindow v-model="activeTab">
+          <VTabsWindowItem value="appearance">
+            <AppearanceSettings />
+          </VTabsWindowItem>
+          <VTabsWindowItem value="layout">
+            <LayoutSettings />
+          </VTabsWindowItem>
+          <VTabsWindowItem value="general">
+            <GeneralSettings />
+          </VTabsWindowItem>
+          <VTabsWindowItem value="preset">
+            <PresetSettings />
+          </VTabsWindowItem>
+        </VTabsWindow>
+      </VSheet>
+      <template #append>
+        <VDivider />
+        <div class="pa-4">
+          <ConfigOperation />
+        </div>
+      </template>
+    </VNavigationDrawer>
+  </VDefaultsProvider>
 </template>
-
-<style scoped>
-:deep(.n-tab) {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-:deep(.n-tab-pane) {
-  padding: 0;
-}
-</style>

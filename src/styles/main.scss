@@ -1,5 +1,48 @@
+@use './scss/scrollbar';
+
 @layer vuetify-overrides {
+  html,
+  body,
+  * {
+    @include scrollbar.scrollbar();
+  }
   code, pre, .v-code {
     font-family: var(--font-mono);
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
+  blockquote,
+  dl,
+  dd,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  figure,
+  p,
+  pre {
+    margin: 0;
+  }
+
+  fieldset {
+    margin: 0;
+    padding: 0;
+  }
+
+  legend {
+    padding: 0;
+  }
+
+  ol,
+  ul,
+  menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watch } from 'vue';
-import { useAppStore } from '../../../stores/modules/app';
+import { useAppStore } from '@/stores/modules/app';
 import { useEcharts } from '@/hooks/common/echarts';
 import { $t } from '@/locales';
 
@@ -144,9 +144,11 @@ init();
 </script>
 
 <template>
-  <NCard :bordered="false" class="card-wrapper">
-    <div ref="domRef" class="h-360px overflow-hidden"></div>
-  </NCard>
+  <VCard>
+    <VCardText>
+      <div ref="domRef" class="h-360px overflow-hidden"></div>
+    </VCardText>
+  </VCard>
 </template>
 
 <style scoped></style>

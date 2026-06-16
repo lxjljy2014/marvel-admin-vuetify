@@ -282,7 +282,7 @@ declare namespace App {
     };
 
     /** Form rule */
-    type FormRule = import('naive-ui').FormItemRule;
+    type FormRule = import('vuetify').ValidationRule;
 
     /** The global dropdown key */
     type DropdownKey = 'closeCurrent' | 'closeOther' | 'closeLeft' | 'closeRight' | 'closeAll' | 'pin' | 'unpin';

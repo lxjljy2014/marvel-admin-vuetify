@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useAppStore } from '../../../../../../stores/modules/app';
-import { useThemeStore } from '../../../../../../stores/modules/theme';
+import { useAppStore } from '@/stores/modules/app';
+import { useThemeStore } from '@/stores/modules/theme';
 import { $t } from '@/locales';
 import LayoutModeCard from '../../../components/layout-mode-card.vue';
 
@@ -13,7 +13,7 @@ const themeStore = useThemeStore();
 </script>
 
 <template>
-  <NDivider>{{ $t('theme.layout.layoutMode.title') }}</NDivider>
+  <VDivider class="my-6">{{ $t('theme.layout.layoutMode.title') }}</VDivider>
   <LayoutModeCard v-model:mode="themeStore.layout.mode" :disabled="appStore.isMobile">
     <template #vertical>
       <div class="layout-sider h-full w-18px !bg-primary"></div>

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue';
 import { useRouterPush } from '@/hooks/common/router';
-import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { useCaptcha } from '@/hooks/business/captcha';
+import { useFormRules, useVuetifyForm } from '@/hooks/common/form';
+
 import { $t } from '@/locales';
 
 defineOptions({
@@ -10,8 +11,9 @@ defineOptions({
 });
 
 const { toggleLoginModule } = useRouterPush();
-const { formRef, validate } = useNaiveForm();
 const { label, isCounting, loading, getCaptcha } = useCaptcha();
+const { valid, formRef, validate } = useVuetifyForm();
+const { formRules } = useFormRules();
 
 interface FormModel {
   phone: string;
@@ -24,8 +26,6 @@ const model: FormModel = reactive({
 });
 
 const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
-  const { formRules } = useFormRules();
-
   return {
     phone: formRules.phone,
     code: formRules.code
@@ -34,33 +34,62 @@ const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
 
 async function handleSubmit() {
   await validate();
-  // request
-  window.$message?.success($t('page.login.common.validateSuccess'));
+  if (valid.value) {
+    window.$message?.success($t('page.login.common.validateSuccess'));
+  }
 }
 </script>
 
 <template>
-  <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
-    <NFormItem path="phone">
-      <NInput v-model:value="model.phone" :placeholder="$t('page.login.common.phonePlaceholder')" />
-    </NFormItem>
-    <NFormItem path="code">
-      <div class="w-full flex-y-center gap-16px">
-        <NInput v-model:value="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
-        <NButton size="large" :disabled="isCounting" :loading="loading" @click="getCaptcha(model.phone)">
-          {{ label }}
-        </NButton>
-      </div>
-    </NFormItem>
-    <NSpace vertical :size="18" class="w-full">
-      <NButton type="primary" size="large" round block @click="handleSubmit">
+  <VForm ref="formRef" v-model="valid" @keyup.enter="handleSubmit">
+    <VTextField
+      v-model="model.phone"
+      :placeholder="$t('page.login.common.phonePlaceholder')"
+      label="手机号"
+      :rules="rules.phone"
+      variant="outlined"
+      density="comfortable"
+      prepend-inner-icon="mdi-phone"
+      color="primary"
+      class="mb-2"
+    />
+
+    <div class="flex items-center gap-4 mb-4">
+      <VTextField
+        v-model="model.code"
+        :placeholder="$t('page.login.common.codePlaceholder')"
+        label="验证码"
+        :rules="rules.code"
+        variant="outlined"
+        density="comfortable"
+        class="flex-1 mb-2"
+        color="primary"
+        prepend-inner-icon="mdi-shield-key"
+      >
+        <template #append>
+          <VBtn
+            :disabled="isCounting"
+            :loading="loading"
+            color="primary"
+            variant="outlined"
+            height="48"
+            @click="getCaptcha(model.phone)"
+          >
+            {{ label }}
+          </VBtn>
+        </template>
+      </VTextField>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <VBtn color="primary" size="large" rounded block @click="handleSubmit">
         {{ $t('common.confirm') }}
-      </NButton>
-      <NButton size="large" round block @click="toggleLoginModule('pwd-login')">
+      </VBtn>
+      <VBtn variant="text" border="sm" size="large" rounded block @click="toggleLoginModule('pwd-login')">
         {{ $t('page.login.common.back') }}
-      </NButton>
-    </NSpace>
-  </NForm>
+      </VBtn>
+    </div>
+  </VForm>
 </template>
 
 <style scoped></style>

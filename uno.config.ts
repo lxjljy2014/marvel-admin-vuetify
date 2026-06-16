@@ -1,54 +1,53 @@
 import { defineConfig, presetWind4, transformerDirectives } from 'unocss';
-import { createThemeVariants } from 'unocss-preset-vuetify';
 import * as breakpoints from './src/theme/breakpoints';
 import { presetSoybeanAdmin } from '@sa/uno-preset';
+import { themeVars } from './src/theme/vars';
 
 export default defineConfig({
   presets: [
     presetWind4({
       preflights: {
         reset: false
+      },
+      dark: {
+        dark: '.v-theme--dark',
+        light: '.v-theme--light'
       }
     }),
     presetSoybeanAdmin()
   ],
   transformers: [transformerDirectives()],
   theme: {
+    ...themeVars,
     breakpoint: breakpoints.forUnoCSS,
     font: {
       heading: 'Roboto, sans-serif',
       body: 'Roboto, sans-serif',
       mono: '"Roboto Mono", sans-serif'
-    },
-    colors: {}
+    }
   },
-
-  variants: createThemeVariants(['light', 'dark']),
-  rules: [
-    ['elevation-0', { 'box-shadow': 'none' }],
-    ['elevation-1', { 'box-shadow': 'var(--shadow-xs)' }],
-    ['elevation-2', { 'box-shadow': 'var(--shadow-sm)' }],
-    ['elevation-3', { 'box-shadow': 'var(--shadow-md)' }],
-    ['elevation-4', { 'box-shadow': 'var(--shadow-xl)' }],
-    ['elevation-5', { 'box-shadow': 'var(--shadow-2xl)' }]
-  ],
+  rules: [],
   safelist: [
     'font-heading',
     'font-body',
     'font-mono',
-    'shadow-none',
-    'shadow-xs',
-    'shadow-sm',
-    'shadow-lg',
-    'shadow-xl',
-    'shadow-2xl',
     ...Array.from({ length: 6 }, (_, i) => `elevation-${i}`),
-    ...['', '-0', '-sm', '-lg', '-xl', '-pill', '-circle', '-shaped'].map(suffix => `rounded${suffix}`)
+    ...['', '-0', '-sm', '-lg', '-xl', '-pill', '-circle', '-shaped'].map(suffix => `rounded${suffix}`),
+    ...['', '-thin', '-sm', '-lg', '-xl'].map(suffix => `border${suffix}`)
   ],
   outputToCssLayers: {
     cssLayerName: layer => (layer === 'properties' ? null : `uno-${layer}`)
   },
   shortcuts: {
+    'card-wrapper': 'rd-8px shadow-sm',
+
+    'elevation-0': 'shadow-none',
+    'elevation-1': 'shadow-xs',
+    'elevation-2': 'shadow-sm',
+    'elevation-3': 'shadow-md',
+    'elevation-4': 'shadow-xl',
+    'elevation-5': 'shadow-2xl',
+
     'text-display-large': '  font-heading normal-case text-[3.5625rem] font-[400] leading-[1.1228] tracking-[-.0044em]',
     'text-display-medium': ' font-heading normal-case text-[2.8125rem] font-[400] leading-[1.1556] tracking-[normal]',
     'text-display-small': '  font-heading normal-case text-[2.25rem]   font-[400] leading-[1.2222] tracking-[normal]',
@@ -64,6 +63,7 @@ export default defineConfig({
     'text-label-large': '    font-body    normal-case text-[.875rem]   font-[500] leading-[1.4286] tracking-[.0071em]',
     'text-label-medium': '   font-body    normal-case text-[.75rem]    font-[500] leading-[1.3333] tracking-[.0417em]',
     'text-label-small': '    font-body    normal-case text-[.6875rem]  font-[500] leading-[1.4545] tracking-[.0455em]',
+
     'rounded-0': 'rounded-none',
     'rounded-sm': 'rounded-[2px]',
     rounded: 'rounded-[4px]',
@@ -100,6 +100,13 @@ export default defineConfig({
     'rounded-e': 'rounded-se-[4px] rounded-ee-[4px]',
     'rounded-e-lg': 'rounded-se-[8px] rounded-ee-[8px]',
     'rounded-e-xl': 'rounded-se-[24px] rounded-ee-[24px]',
-    'rounded-e-pill': 'rounded-se-full rounded-ee-full'
+    'rounded-e-pill': 'rounded-se-full rounded-ee-full',
+
+    border: 'border-1px',
+    'border-thin': 'border-1px',
+    'border-sm': 'border-1px',
+    'border-md': 'border-2px',
+    'border-lg': 'border-4px',
+    'border-xl': 'border-8px'
   }
 });

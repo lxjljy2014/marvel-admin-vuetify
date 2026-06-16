@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useThemeStore } from '../../../../../../stores/modules/theme';
+import { useThemeStore } from '@/stores/modules/theme';
 import { $t } from '@/locales';
 import SettingItem from '../../../components/setting-item.vue';
 
@@ -16,28 +16,68 @@ const isHybridLayoutMode = computed(() => layoutMode.value.includes('hybrid'));
 </script>
 
 <template>
-  <NDivider>{{ $t('theme.layout.sider.title') }}</NDivider>
+  <VDivider class="my-6">{{ $t('theme.layout.sider.title') }}</VDivider>
   <TransitionGroup tag="div" name="setting-list" class="flex-col-stretch gap-12px">
     <SettingItem v-if="layoutMode === 'vertical'" key="1" :label="$t('theme.layout.sider.width')">
-      <NInputNumber v-model:value="themeStore.sider.width" size="small" :step="1" class="w-120px" />
+      <VNumberInput
+        v-model="themeStore.sider.width"
+        control-variant="split"
+        hide-details
+        density="compact"
+        variant="outlined"
+        color="primary"
+        max-width="150"
+      />
     </SettingItem>
     <SettingItem v-if="layoutMode === 'vertical'" key="2" :label="$t('theme.layout.sider.collapsedWidth')">
-      <NInputNumber v-model:value="themeStore.sider.collapsedWidth" size="small" :step="1" class="w-120px" />
+      <VNumberInput
+        v-model="themeStore.sider.collapsedWidth"
+        control-variant="split"
+        hide-details
+        density="compact"
+        variant="outlined"
+        color="primary"
+        max-width="150"
+      />
     </SettingItem>
     <SettingItem v-if="isMixLayoutMode" key="3" :label="$t('theme.layout.sider.mixWidth')">
-      <NInputNumber v-model:value="themeStore.sider.mixWidth" size="small" :step="1" class="w-120px" />
+      <VNumberInput
+        v-model="themeStore.sider.mixWidth"
+        control-variant="split"
+        hide-details
+        density="compact"
+        variant="outlined"
+        color="primary"
+        max-width="150"
+      />
     </SettingItem>
     <SettingItem v-if="isMixLayoutMode" key="4" :label="$t('theme.layout.sider.mixCollapsedWidth')">
-      <NInputNumber v-model:value="themeStore.sider.mixCollapsedWidth" size="small" :step="1" class="w-120px" />
+      <VNumberInput
+        v-model="themeStore.sider.mixCollapsedWidth"
+        control-variant="split"
+        hide-details
+        density="compact"
+        variant="outlined"
+        color="primary"
+        max-width="150"
+      />
     </SettingItem>
     <SettingItem v-if="layoutMode === 'vertical-mix'" key="5" :label="$t('theme.layout.sider.mixChildMenuWidth')">
-      <NInputNumber v-model:value="themeStore.sider.mixChildMenuWidth" size="small" :step="1" class="w-120px" />
+      <VNumberInput
+        v-model="themeStore.sider.mixChildMenuWidth"
+        control-variant="split"
+        hide-details
+        density="compact"
+        variant="outlined"
+        color="primary"
+        max-width="150"
+      />
     </SettingItem>
     <SettingItem v-if="isHybridLayoutMode" key="6" :label="$t('theme.layout.sider.autoSelectFirstMenu')">
       <template #suffix>
         <IconTooltip :desc="$t('theme.layout.sider.autoSelectFirstMenuTip')" />
       </template>
-      <NSwitch v-model:value="themeStore.sider.autoSelectFirstMenu" />
+      <VSwitch v-model="themeStore.sider.autoSelectFirstMenu" />
     </SettingItem>
   </TransitionGroup>
 </template>

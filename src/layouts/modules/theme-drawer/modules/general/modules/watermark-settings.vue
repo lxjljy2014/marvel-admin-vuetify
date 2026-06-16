@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { watermarkTimeFormatOptions } from '@/constants/app';
-import { useThemeStore } from '../../../../../../stores/modules/theme';
+import { useThemeStore } from '@/stores/modules/theme';
 import { $t } from '@/locales';
 import SettingItem from '../../../components/setting-item.vue';
 
@@ -17,37 +17,44 @@ const isWatermarkTextVisible = computed(
 </script>
 
 <template>
-  <NDivider>{{ $t('theme.general.watermark.title') }}</NDivider>
+  <VDivider class="my-6">{{ $t('theme.general.watermark.title') }}</VDivider>
   <TransitionGroup tag="div" name="setting-list" class="flex-col-stretch gap-12px">
     <SettingItem key="1" :label="$t('theme.general.watermark.visible')">
-      <NSwitch v-model:value="themeStore.watermark.visible" />
+      <VSwitch v-model="themeStore.watermark.visible" />
     </SettingItem>
     <SettingItem v-if="themeStore.watermark.visible" key="2" :label="$t('theme.general.watermark.enableUserName')">
-      <NSwitch :value="themeStore.watermark.enableUserName" @update:value="themeStore.setWatermarkEnableUserName" />
+      <VSwitch :value="themeStore.watermark.enableUserName" @update:value="themeStore.setWatermarkEnableUserName" />
     </SettingItem>
     <SettingItem v-if="themeStore.watermark.visible" key="3" :label="$t('theme.general.watermark.enableTime')">
-      <NSwitch :value="themeStore.watermark.enableTime" @update:value="themeStore.setWatermarkEnableTime" />
+      <VSwitch :value="themeStore.watermark.enableTime" @update:value="themeStore.setWatermarkEnableTime" />
     </SettingItem>
     <SettingItem
       v-if="themeStore.watermark.visible && themeStore.watermark.enableTime"
       key="4"
       :label="$t('theme.general.watermark.timeFormat')"
     >
-      <NSelect
-        v-model:value="themeStore.watermark.timeFormat"
-        :options="watermarkTimeFormatOptions"
-        size="small"
-        class="w-210px"
+      <VSelect
+        v-model="themeStore.watermark.timeFormat"
+        :items="watermarkTimeFormatOptions"
+        item-props
+        item-title="label"
+        item-value="value"
+        density="compact"
+        max-width="150"
+        hide-details
+        color="primary"
+        variant="outlined"
       />
     </SettingItem>
     <SettingItem v-if="isWatermarkTextVisible" key="5" :label="$t('theme.general.watermark.text')">
-      <NInput
-        v-model:value="themeStore.watermark.text"
-        autosize
-        type="text"
-        size="small"
-        class="w-120px"
+      <VTextarea
+        v-model="themeStore.watermark.text"
+        density="compact"
+        variant="outlined"
+        hide-details
+        rows="1"
         placeholder="SoybeanAdmin"
+        max-width="200"
       />
     </SettingItem>
   </TransitionGroup>

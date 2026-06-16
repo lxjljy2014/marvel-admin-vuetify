@@ -1,9 +1,19 @@
 <script lang="ts" setup>
-//
+import { useThemeStore } from '@/stores/modules/theme';
+const themeStore = useThemeStore();
 </script>
 
 <template>
-  <VApp>
+  <VDefaultsProvider
+    :defaults="{
+      global: {
+        rounded: themeStore.themeRadius
+      },
+      VAppBar: { tile: true, rounded: false },
+      VNavigationDrawer: { tile: true, rounded: false },
+      VAppBarNavIcon: { size: 40 }
+    }"
+  >
     <RouterView />
-  </VApp>
+  </VDefaultsProvider>
 </template>

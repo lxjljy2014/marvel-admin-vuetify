@@ -31,31 +31,39 @@ const tooltipContent = computed(() => {
   return $t('icon.lang');
 });
 
-/** Add bottom margin to all options except the last one for proper visual separation */
-const dropdownOptions = computed(() => {
-  const lastIndex = props.langOptions.length - 1;
-
-  return props.langOptions.map((option, index) => ({
-    ...option,
-    props: {
-      class: index < lastIndex ? 'mb-1' : undefined
-    }
-  }));
-});
-
 function changeLang(lang: App.I18n.LangType) {
   emit('changeLang', lang);
+}
+
+function handleActivate(value: { id: unknown }) {
+  changeLang(value.id as App.I18n.LangType);
 }
 </script>
 
 <template>
-  <NDropdown :value="lang" :options="dropdownOptions" trigger="hover" @select="changeLang">
-    <div>
-      <ButtonIcon :tooltip-content="tooltipContent" tooltip-placement="left">
-        <SvgIcon icon="heroicons:language" />
-      </ButtonIcon>
-    </div>
-  </NDropdown>
+  <VMenu location="bottom end">
+    <template #activator="{ props: menuProps }">
+      <ButtonIcon
+        v-bind="menuProps"
+        :tooltip-content="tooltipContent"
+        tooltip-placement="left"
+        icon="mdi-translate"
+      ></ButtonIcon>
+    </template>
+    <VList
+      :items="langOptions"
+      activatable
+      :activated="[lang]"
+      item-props
+      item-value="key"
+      item-title="label"
+      color="primary"
+      density="compact"
+      nav
+      slim
+      @click:activate="handleActivate"
+    ></VList>
+  </VMenu>
 </template>
 
 <style scoped></style>

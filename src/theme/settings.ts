@@ -7,10 +7,10 @@ export const themeSettings: App.Theme.ThemeSetting = {
   themeColor: '#646cff',
   themeRadius: 6,
   otherColor: {
-    info: '#2080f0',
-    success: '#52c41a',
-    warning: '#faad14',
-    error: '#f5222d'
+    error: '#cf6679',
+    info: '#2196f3',
+    success: '#4caf50',
+    warning: '#fb8c00'
   },
   isInfoFollowPrimary: true,
   layout: {

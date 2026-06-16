@@ -1,66 +1,71 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { themeSchemaRecord } from '@/constants/app';
-import { useThemeStore } from '../../../../../../stores/modules/theme';
+import { useThemeStore } from '@/stores/modules/theme';
 import { $t } from '@/locales';
 import SettingItem from '../../../components/setting-item.vue';
+import { useTheme } from 'vuetify';
 
 defineOptions({
   name: 'ThemeSchema'
 });
 
 const themeStore = useThemeStore();
+const theme = useTheme();
 
 const icons: Record<UnionKey.ThemeScheme, string> = {
-  light: 'material-symbols:sunny',
-  dark: 'material-symbols:nightlight-rounded',
-  auto: 'material-symbols:hdr-auto'
+  light: 'mdi-weather-sunny',
+  dark: 'mdi-weather-night',
+  auto: 'mdi-brightness-auto'
 };
 
-function handleSegmentChange(value: string | number) {
-  themeStore.setThemeScheme(value as UnionKey.ThemeScheme);
+function handleSegmentChange(e: PointerEvent) {
+  themeStore.setThemeScheme(themeStore.themeScheme);
+  theme.setTransitionOrigin(e);
+  theme.change(themeStore.themeScheme, {
+    duration: '500ms'
+  });
 }
 
-function handleGrayscaleChange(value: boolean) {
-  themeStore.setGrayscale(value);
+function handleGrayscaleChange(value: boolean | null) {
+  themeStore.setGrayscale(Boolean(value));
 }
 
-function handleColourWeaknessChange(value: boolean) {
-  themeStore.setColourWeakness(value);
+function handleColourWeaknessChange(value: boolean | null) {
+  themeStore.setColourWeakness(Boolean(value));
 }
 
 const showSiderInverted = computed(() => !themeStore.darkMode && themeStore.layout.mode.includes('vertical'));
 </script>
 
 <template>
-  <NDivider>{{ $t('theme.appearance.themeSchema.title') }}</NDivider>
-  <div class="flex-col-stretch gap-16px">
-    <div class="i-flex-center">
-      <NTabs
-        :key="themeStore.themeScheme"
-        type="segment"
-        size="small"
-        class="relative w-214px"
-        :value="themeStore.themeScheme"
-        @update:value="handleSegmentChange"
-      >
-        <NTab v-for="(_, key) in themeSchemaRecord" :key="key" :name="key">
-          <SvgIcon :icon="icons[key]" class="h-23px text-icon-small" />
-        </NTab>
-      </NTabs>
-    </div>
-    <Transition name="sider-inverted">
-      <SettingItem v-if="showSiderInverted" :label="$t('theme.layout.sider.inverted')">
-        <NSwitch v-model:value="themeStore.sider.inverted" />
-      </SettingItem>
-    </Transition>
-    <SettingItem :label="$t('theme.appearance.grayscale')">
-      <NSwitch :value="themeStore.grayscale" @update:value="handleGrayscaleChange" />
-    </SettingItem>
-    <SettingItem :label="$t('theme.appearance.colourWeakness')">
-      <NSwitch :value="themeStore.colourWeakness" @update:value="handleColourWeaknessChange" />
-    </SettingItem>
+  <VDivider class="my-6">{{ $t('theme.appearance.themeSchema.title') }}</VDivider>
+
+  <div class="flex items-center justify-center">
+    <VTabs
+      :key="themeStore.themeScheme"
+      v-model="themeStore.themeScheme"
+      density="compact"
+      class="relative w-214px mb-8"
+      inset
+      @click="handleSegmentChange($event)"
+    >
+      <VTab v-for="(_, key) in themeSchemaRecord" :key="key" :value="key">
+        <VIcon :icon="icons[key]"></VIcon>
+      </VTab>
+    </VTabs>
   </div>
+  <Transition name="sider-inverted">
+    <SettingItem v-if="showSiderInverted" :label="$t('theme.layout.sider.inverted')">
+      <VSwitch v-model="themeStore.sider.inverted" hide-details />
+    </SettingItem>
+  </Transition>
+  <SettingItem :label="$t('theme.appearance.grayscale')">
+    <VSwitch :model-value="themeStore.grayscale" hide-details @update:model-value="handleGrayscaleChange" />
+  </SettingItem>
+  <SettingItem :label="$t('theme.appearance.colourWeakness')">
+    <VSwitch :model-value="themeStore.colourWeakness" hide-details @update:model-value="handleColourWeaknessChange" />
+  </SettingItem>
 </template>
 
 <style scoped>

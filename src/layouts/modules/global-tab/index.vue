@@ -3,9 +3,9 @@ import { nextTick, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useElementBounding } from '@vueuse/core';
 import { PageTab } from '@sa/materials';
-import { useAppStore } from '../../../stores/modules/app';
-import { useThemeStore } from '../../../stores/modules/theme';
-import { useTabStore } from '../../../stores/modules/tab';
+import { useAppStore } from '@/stores/modules/app';
+import { useThemeStore } from '@/stores/modules/theme';
+import { useTabStore } from '@/stores/modules/tab';
 import { isPC } from '@/utils/agent';
 import BetterScroll from '@/components/custom/better-scroll.vue';
 import ContextMenu from './context-menu.vue';
@@ -185,7 +185,7 @@ init();
 </script>
 
 <template>
-  <DarkModeContainer class="size-full flex-y-center px-16px shadow-tab">
+  <div class="size-full flex-y-center px-16px shadow-tab">
     <div ref="bsWrapper" class="h-full flex-1-hidden">
       <BetterScroll ref="bsScroll" :options="{ scrollX: true, scrollY: false, click: !isPCFlag }" @click="removeFocus">
         <div
@@ -219,7 +219,7 @@ init();
     </div>
     <ReloadButton :loading="!appStore.reloadFlag" @click="refresh" />
     <FullScreen :full="appStore.fullContent" @click="appStore.toggleFullContent" />
-  </DarkModeContainer>
+  </div>
   <ContextMenu
     :visible="dropdown.visible"
     :tab-id="dropdown.tabId"

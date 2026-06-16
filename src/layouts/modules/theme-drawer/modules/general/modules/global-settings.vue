@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useThemeStore } from '../../../../../../stores/modules/theme';
+import { useThemeStore } from '@/stores/modules/theme';
 import { $t } from '@/locales';
 import SettingItem from '../../../components/setting-item.vue';
 
@@ -11,13 +11,13 @@ const themeStore = useThemeStore();
 </script>
 
 <template>
-  <NDivider>{{ $t('theme.general.title') }}</NDivider>
+  <VDivider class="my-6">{{ $t('theme.general.title') }}</VDivider>
   <SettingItem :label="$t('theme.general.multilingual.visible')">
-    <NSwitch v-model:value="themeStore.header.multilingual.visible" />
+    <VSwitch v-model="themeStore.header.multilingual.visible" />
   </SettingItem>
 
   <SettingItem :label="$t('theme.general.globalSearch.visible')">
-    <NSwitch v-model:value="themeStore.header.globalSearch.visible" />
+    <VSwitch v-model="themeStore.header.globalSearch.visible" />
   </SettingItem>
 </template>
 

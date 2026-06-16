@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { SimpleScrollbar } from '@sa/materials';
 import { GLOBAL_SIDER_MENU_ID } from '@/constants/app';
-import { useAppStore } from '../../../../stores/modules/app';
-import { useThemeStore } from '../../../../stores/modules/theme';
-import { useRouteStore } from '../../../../stores/modules/route';
-import { useRouterPush } from '@/hooks/common/router';
+import { useAppStore } from '@/stores/modules/app';
+import { useRouteStore } from '@/stores/modules/route';
 import { useMenu } from '../context';
+import ListGroup from '@/layouts/modules/global-menu/components/ListGroup.vue';
 
 defineOptions({
   name: 'VerticalMenu'
@@ -15,12 +14,8 @@ defineOptions({
 
 const route = useRoute();
 const appStore = useAppStore();
-const themeStore = useThemeStore();
 const routeStore = useRouteStore();
-const { routerPushByKeyWithMetaQuery } = useRouterPush();
 const { selectedKey } = useMenu();
-
-const inverted = computed(() => !themeStore.darkMode && themeStore.sider.inverted);
 
 const expandedKeys = ref<string[]>([]);
 
@@ -43,20 +38,18 @@ watch(
 
 <template>
   <Teleport :to="`#${GLOBAL_SIDER_MENU_ID}`">
-    <SimpleScrollbar>
-      <NMenu
-        v-model:expanded-keys="expandedKeys"
-        mode="vertical"
-        :value="selectedKey"
-        :collapsed="appStore.siderCollapse"
-        :collapsed-width="themeStore.sider.collapsedWidth"
-        :collapsed-icon-size="22"
-        :options="routeStore.menus"
-        :inverted="inverted"
-        :indent="18"
-        @update:value="routerPushByKeyWithMetaQuery"
-      />
-    </SimpleScrollbar>
+    <VList color="primary" density="comfortable" nav prepend-gap="16" indent="16">
+      <template v-for="menu in routeStore.menus" :key="menu.routeKey">
+        <ListGroup v-if="menu.children" :menu="menu" />
+        <VListItem
+          v-else
+          :prepend-icon="menu.icon"
+          :value="menu.routePath"
+          :title="menu.label"
+          :to="menu.routePath"
+        ></VListItem>
+      </template>
+    </VList>
   </Teleport>
 </template>
 

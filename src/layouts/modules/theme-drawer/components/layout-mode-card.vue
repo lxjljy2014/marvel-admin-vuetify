@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { PopoverPlacement } from 'naive-ui';
 import { themeLayoutModeRecord } from '@/constants/app';
 import { $t } from '@/locales';
+import type { Anchor } from 'vuetify/framework';
 
 defineOptions({
   name: 'LayoutModeCard'
@@ -26,7 +26,7 @@ const emit = defineEmits<Emits>();
 type LayoutConfig = Record<
   UnionKey.ThemeLayoutMode,
   {
-    placement: PopoverPlacement;
+    placement: Anchor;
     menuClass: string;
     mainClass: string;
   }

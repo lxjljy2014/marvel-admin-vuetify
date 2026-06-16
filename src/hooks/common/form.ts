@@ -1,36 +1,19 @@
 import { ref, toValue } from 'vue';
 import type { ComputedRef, Ref } from 'vue';
-import type { FormInst } from 'naive-ui';
 import { REG_CODE_SIX, REG_EMAIL, REG_PHONE, REG_PWD, REG_USER_NAME } from '@/constants/reg';
 import { $t } from '@/locales';
+import { useRules } from 'vuetify/labs/rules';
+import { VForm } from 'vuetify/components';
 
 export function useFormRules() {
+  const rules = useRules();
+
   const patternRules = {
-    userName: {
-      pattern: REG_USER_NAME,
-      message: $t('form.userName.invalid'),
-      trigger: 'change'
-    },
-    phone: {
-      pattern: REG_PHONE,
-      message: $t('form.phone.invalid'),
-      trigger: 'change'
-    },
-    pwd: {
-      pattern: REG_PWD,
-      message: $t('form.pwd.invalid'),
-      trigger: 'change'
-    },
-    code: {
-      pattern: REG_CODE_SIX,
-      message: $t('form.code.invalid'),
-      trigger: 'change'
-    },
-    email: {
-      pattern: REG_EMAIL,
-      message: $t('form.email.invalid'),
-      trigger: 'change'
-    }
+    userName: rules.pattern(REG_USER_NAME, $t('form.userName.invalid')),
+    phone: rules.pattern(REG_PHONE, $t('form.phone.invalid')),
+    pwd: rules.pattern(REG_PWD, $t('form.pwd.invalid')),
+    code: rules.pattern(REG_CODE_SIX, $t('form.code.invalid')),
+    email: rules.pattern(REG_EMAIL, $t('form.email.invalid'))
   } satisfies Record<string, App.Global.FormRule>;
 
   const formRules = {
@@ -45,26 +28,14 @@ export function useFormRules() {
   const defaultRequiredRule = createRequiredRule($t('form.required'));
 
   function createRequiredRule(message: string): App.Global.FormRule {
-    return {
-      required: true,
-      message
-    };
+    return rules.required(message);
   }
 
   /** create a rule for confirming the password */
   function createConfirmPwdRule(pwd: string | Ref<string> | ComputedRef<string>) {
     const confirmPwdRule: App.Global.FormRule[] = [
-      { required: true, message: $t('form.confirmPwd.required') },
-      {
-        asyncValidator: (rule, value) => {
-          if (value.trim() !== '' && value !== toValue(pwd)) {
-            return Promise.reject(rule.message);
-          }
-          return Promise.resolve();
-        },
-        message: $t('form.confirmPwd.invalid'),
-        trigger: 'input'
-      }
+      rules.required($t('form.confirmPwd.required')),
+      rules.pattern(new RegExp(`^${toValue(pwd)}$`), $t('form.confirmPwd.invalid'))
     ];
     return confirmPwdRule;
   }
@@ -78,8 +49,10 @@ export function useFormRules() {
   };
 }
 
-export function useNaiveForm() {
-  const formRef = ref<FormInst | null>(null);
+export function useVuetifyForm() {
+  const formRef = ref<InstanceType<typeof VForm> | null>(null);
+
+  const valid = ref<boolean | null>(null);
 
   async function validate() {
     await formRef.value?.validate();
@@ -91,6 +64,7 @@ export function useNaiveForm() {
 
   return {
     formRef,
+    valid,
     validate,
     restoreValidation
   };

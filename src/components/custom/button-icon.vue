@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { PopoverPlacement } from 'naive-ui';
-import { twMerge } from 'tailwind-merge';
+import type { Anchor } from 'vuetify';
 
 defineOptions({
   name: 'ButtonIcon',
@@ -9,40 +8,38 @@ defineOptions({
 
 interface Props {
   /** Button class */
-  class?: string;
+  class?: string | Record<string, boolean>;
   /** Iconify icon name */
   icon?: string;
   /** Tooltip content */
   tooltipContent?: string;
   /** Tooltip placement */
-  tooltipPlacement?: PopoverPlacement;
-  zIndex?: number;
+  tooltipPlacement?: Anchor;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   class: '',
   icon: '',
   tooltipContent: '',
-  tooltipPlacement: 'bottom',
-  zIndex: 98
+  tooltipPlacement: 'bottom'
 });
-
-const DEFAULT_CLASS = 'h-[36px] text-icon';
 </script>
 
 <template>
-  <NTooltip :placement="tooltipPlacement" :z-index="zIndex" :disabled="!tooltipContent">
-    <template #trigger>
-      <NButton quaternary :class="twMerge(DEFAULT_CLASS, props.class)" v-bind="$attrs">
-        <div class="flex-center gap-8px">
-          <slot>
-            <SvgIcon :icon="icon" />
-          </slot>
-        </div>
-      </NButton>
+  <VTooltip :location="tooltipPlacement" :disabled="!tooltipContent">
+    <template #activator="{ props: activatorProps }">
+      <VIconBtn
+        icon-size="20"
+        size="40"
+        variant="text"
+        :icon="icon"
+        rounded="lg"
+        :class="props.class"
+        v-bind="{ ...activatorProps, ...$attrs }"
+      ></VIconBtn>
     </template>
     {{ tooltipContent }}
-  </NTooltip>
+  </VTooltip>
 </template>
 
 <style scoped></style>

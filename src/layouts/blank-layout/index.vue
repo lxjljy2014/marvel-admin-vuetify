@@ -7,7 +7,9 @@ defineOptions({
 </script>
 
 <template>
-  <GlobalContent :show-padding="false" />
+  <VApp>
+    <GlobalContent :show-padding="false" />
+  </VApp>
 </template>
 
 <style scoped></style>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { LAYOUT_SCROLL_EL_ID } from '@sa/materials';
-import { useAppStore } from '../../../stores/modules/app';
-import { useThemeStore } from '../../../stores/modules/theme';
-import { useRouteStore } from '../../../stores/modules/route';
-import { useTabStore } from '../../../stores/modules/tab';
+import { useAppStore } from '@/stores/modules/app';
+import { useThemeStore } from '@/stores/modules/theme';
+import { useRouteStore } from '@/stores/modules/route';
+import { useTabStore } from '@/stores/modules/tab';
 
 defineOptions({
   name: 'GlobalContent'
@@ -35,7 +35,7 @@ function resetScroll() {
 
 <template>
   <VMain scrollable>
-    <VContainer fluid :class="{ 'p-16px': showPadding }">
+    <VContainer fluid class="flex-col flex-grow" :class="{ 'p-16px': showPadding }">
       <RouterView v-slot="{ Component, route }">
         <Transition
           :name="transitionName"
@@ -49,7 +49,7 @@ function resetScroll() {
               :is="Component"
               v-if="appStore.reloadFlag"
               :key="tabStore.getTabIdByRoute(route)"
-              class="flex-grow bg-layout transition-300"
+              class="flex-grow transition-300"
             />
           </KeepAlive>
         </Transition>
@@ -58,4 +58,9 @@ function resetScroll() {
   </VMain>
 </template>
 
-<style></style>
+<style lang="scss" scoped>
+:deep(.v-main__scroller) {
+  display: flex;
+  flex-direction: column;
+}
+</style>

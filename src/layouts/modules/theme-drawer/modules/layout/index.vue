@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useThemeStore } from '../../../../../stores/modules/theme';
+import { useThemeStore } from '@/stores/modules/theme';
 import LayoutMode from './modules/layout-mode.vue';
 import TabSettings from './modules/tab-settings.vue';
 import HeaderSettings from './modules/header-settings.vue';
