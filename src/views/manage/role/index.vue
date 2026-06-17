@@ -4,8 +4,8 @@ import { enableStatusRecord } from '@/constants/business';
 import { fetchGetRoleList } from '@/service/api';
 import { defaultTransform, useVuetifyPaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
-import RoleOperateDrawer from './modules/role-operate-drawer.vue';
-import RoleSearch from './modules/role-search.vue';
+import RoleOperateDrawer from './modules/RoleOperateDrawer.vue';
+import RoleSearch from './modules/RoleSearch.vue';
 
 const searchParams = ref<Api.SystemManage.RoleSearchParams>({
   current: 1,

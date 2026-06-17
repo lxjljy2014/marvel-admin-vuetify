@@ -7,8 +7,8 @@ import { useAppStore } from '@/stores/modules/app';
 import { useThemeStore } from '@/stores/modules/theme';
 import { useTabStore } from '@/stores/modules/tab';
 import { isPC } from '@/utils/agent';
-import BetterScroll from '@/components/custom/better-scroll.vue';
-import ContextMenu from './context-menu.vue';
+import BetterScroll from '@/components/custom/BetterScroll.vue';
+import ContextMenu from './ContextMenu.vue';
 
 defineOptions({
   name: 'GlobalTab'

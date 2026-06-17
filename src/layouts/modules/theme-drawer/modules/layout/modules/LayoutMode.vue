@@ -2,7 +2,7 @@
 import { useAppStore } from '@/stores/modules/app';
 import { useThemeStore } from '@/stores/modules/theme';
 import { $t } from '@/locales';
-import LayoutModeCard from '../../../components/layout-mode-card.vue';
+import LayoutModeCard from '../../../components/LayoutModeCard.vue';
 
 defineOptions({
   name: 'LayoutMode'

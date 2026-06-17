@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import WebSiteLink from './web-site-link.vue';
+import WebSiteLink from './WebSiteLink.vue';
 
 defineOptions({ name: 'GithubLink' });
 

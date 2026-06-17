@@ -5,7 +5,7 @@ import { fetchGetAllRoles } from '@/service/api';
 import { useFormRules, useVuetifyForm } from '@/hooks/common/form';
 import { getLocalIcons } from '@/utils/icon';
 import { $t } from '@/locales';
-import SvgIcon from '@/components/custom/svg-icon.vue';
+import SvgIcon from '@/components/custom/SvgIcon.vue';
 import {
   getLayoutAndPage,
   getPathParamFromRoutePath,

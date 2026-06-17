@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 import type { Ref } from 'vue';
 import type { CustomBehaviorOption, IPointerEvent } from '@antv/g6';
-import AntvFlow from './modules/antv-flow.vue';
+import AntvFlow from './modules/AntvFlow.vue';
 import type { CustomGraphData } from './modules/types';
 import { getFlowData } from './data';
 

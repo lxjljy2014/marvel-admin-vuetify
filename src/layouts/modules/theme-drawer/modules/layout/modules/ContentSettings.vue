@@ -4,7 +4,7 @@ import { themePageAnimationModeOptions, themeScrollModeOptions } from '@/constan
 import { useThemeStore } from '@/stores/modules/theme';
 import { translateOptions } from '@/utils/common';
 import { $t } from '@/locales';
-import SettingItem from '../../../components/setting-item.vue';
+import SettingItem from '../../../components/SettingItem.vue';
 
 defineOptions({
   name: 'ContentSettings'

@@ -4,8 +4,8 @@ import { enableStatusRecord, userGenderRecord } from '@/constants/business';
 import { fetchGetUserList } from '@/service/api';
 import { defaultTransform, useVuetifyPaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
-import UserSearch from './modules/user-search.vue';
-import UserOperateDrawer from './modules/user-operate-drawer.vue';
+import UserSearch from './modules/UserSearch.vue';
+import UserOperateDrawer from './modules/UserOperateDrawer.vue';
 
 const searchParams = ref<Api.SystemManage.UserSearchParams>({
   current: 1,

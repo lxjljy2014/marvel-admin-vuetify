@@ -5,8 +5,8 @@ import { jsonClone } from '@sa/utils';
 import { enableStatusOptions } from '@/constants/business';
 import { useFormRules, useVuetifyForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-import MenuAuthModal from './menu-auth-modal.vue';
-import ButtonAuthModal from './button-auth-modal.vue';
+import MenuAuthModal from './MenuAuthModal.vue';
+import ButtonAuthModal from './ButtonAuthModal.vue';
 
 defineOptions({
   name: 'RoleOperateDrawer'

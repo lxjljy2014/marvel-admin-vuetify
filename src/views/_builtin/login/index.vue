@@ -7,11 +7,11 @@ import { useAppStore } from '@/stores/modules/app';
 import { useThemeStore } from '@/stores/modules/theme';
 import { useTheme } from 'vuetify';
 import { $t } from '@/locales';
-import PwdLogin from './modules/pwd-login.vue';
-import CodeLogin from './modules/code-login.vue';
-import Register from './modules/register.vue';
-import ResetPwd from './modules/reset-pwd.vue';
-import BindWechat from './modules/bind-wechat.vue';
+import PwdLogin from './modules/PwdLogin.vue';
+import CodeLogin from './modules/CodeLogin.vue';
+import Register from './modules/Register.vue';
+import ResetPwd from './modules/ResetPwd.vue';
+import BindWechat from './modules/BindWechat.vue';
 
 interface Props {
   /** The login module */

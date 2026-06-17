@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import GlobalSettings from './modules/global-settings.vue';
-import WatermarkSettings from './modules/watermark-settings.vue';
+import GlobalSettings from './modules/GlobalSettings.vue';
+import WatermarkSettings from './modules/WatermarkSettings.vue';
 
 defineOptions({
   name: 'GeneralSettings'

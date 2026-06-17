@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import ThemeSchema from './modules/theme-schema.vue';
-import ThemeColor from './modules/theme-color.vue';
-import ThemeRadius from './modules/theme-radius.vue';
+import ThemeSchema from './modules/ThemeSchema.vue';
+import ThemeColor from './modules/ThemeColor.vue';
+import ThemeRadius from './modules/ThemeRadius.vue';
 
 defineOptions({
   name: 'AppearanceSettings'

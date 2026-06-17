@@ -4,7 +4,7 @@ import { GLOBAL_HEADER_MENU_ID, GLOBAL_SIDER_MENU_ID } from '@/constants/app';
 import { useAppStore } from '../../../../stores/modules/app';
 import { useThemeStore } from '../../../../stores/modules/theme';
 import { useRouterPush } from '@/hooks/common/router';
-import FirstLevelMenu from '../components/first-level-menu.vue';
+import FirstLevelMenu from '../components/FirstLevelMenu.vue';
 import { useMenu, useMixMenuContext } from '../context';
 
 defineOptions({

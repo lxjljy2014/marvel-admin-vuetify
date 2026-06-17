@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useThemeStore } from '@/stores/modules/theme';
-import LayoutMode from './modules/layout-mode.vue';
-import TabSettings from './modules/tab-settings.vue';
-import HeaderSettings from './modules/header-settings.vue';
-import SiderSettings from './modules/sider-settings.vue';
-import FooterSettings from './modules/footer-settings.vue';
-import ContentSettings from './modules/content-settings.vue';
+import LayoutMode from './modules/LayoutMode.vue';
+import TabSettings from './modules/TabSettings.vue';
+import HeaderSettings from './modules/HeaderSettings.vue';
+import SiderSettings from './modules/SiderSettings.vue';
+import FooterSettings from './modules/FooterSettings.vue';
+import ContentSettings from './modules/ContentSettings.vue';
 
 defineOptions({
   name: 'LayoutSettings'

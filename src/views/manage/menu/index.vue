@@ -5,8 +5,8 @@ import { enableStatusRecord, menuTypeRecord } from '@/constants/business';
 import { fetchGetAllPages, fetchGetMenuList } from '@/service/api';
 import { defaultTransform, useVuetifyPaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
-import SvgIcon from '@/components/custom/svg-icon.vue';
-import MenuOperateModal, { type OperateType } from './modules/menu-operate-modal.vue';
+import SvgIcon from '@/components/custom/SvgIcon.vue';
+import MenuOperateModal, { type OperateType } from './modules/MenuOperateModal.vue';
 
 const {
   headers,

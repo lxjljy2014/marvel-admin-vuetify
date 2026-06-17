@@ -5,7 +5,7 @@ import { $t } from '@/locales';
 import AppearanceSettings from './modules/appearance/index.vue';
 import LayoutSettings from './modules/layout/index.vue';
 import GeneralSettings from './modules/general/index.vue';
-import ConfigOperation from './modules/config-operation.vue';
+import ConfigOperation from './modules/ConfigOperation.vue';
 import PresetSettings from './modules/preset/index.vue';
 
 defineOptions({
