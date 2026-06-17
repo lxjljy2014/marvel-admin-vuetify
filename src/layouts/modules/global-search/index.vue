@@ -80,7 +80,7 @@ function handleSearchChange(_value: string) {
       activatable: true,
       activeColor: 'primary'
     }"
-    offset-top="Ovh"
+    offset-top="60px"
     max-height="600"
     class="rd-8px"
     :content-props="{
