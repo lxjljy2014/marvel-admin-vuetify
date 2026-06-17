@@ -1,0 +1,30 @@
+- [x] `useVuetifyPaginatedTable` hook 正确返回 VDataTable 所需的 headers、serverItems、loading、分页属性和回调方法
+- [x] `useVuetifyPaginatedTable` 使用 `useDisplay()` 实现移动端/桌面端分页差异化显示
+- [x] `useVuetifyPaginatedTable` 的 columnChecks 逻辑能正确控制 VDataTable headers 的显示/隐藏
+- [x] `TableHeaderOperation` 组件使用 VBtn、VDialog 等 Vuetify 组件，无 Naive UI 依赖
+- [x] `TableHeaderOperation` 保留 add/delete/refresh 事件和 prefix/suffix 插槽
+- [x] `TableColumnSetting` 组件使用 VMenu、VCheckbox、VDivider 等 Vuetify 组件，无 Naive UI 依赖
+- [x] `TableColumnSetting` 保留拖拽排序、全选/反选、列固定切换功能
+- [x] `user-search.vue` 使用 VCard、VExpansionPanels、VForm、VTextField、VSelect、VBtn 等 Vuetify 组件
+- [x] `user-search.vue` 使用 `useVuetifyForm` 替代 `useNaiveForm`，表单验证正常工作
+- [x] `user-search.vue` 实现响应式布局：移动端单列、平板双列、桌面端六列
+- [x] `user-search.vue` 搜索和重置功能正常工作
+- [x] `user-operate-drawer.vue` 使用 VNavigationDrawer 替代 NDrawer
+- [x] `user-operate-drawer.vue` 使用 `useVuetifyForm` 替代 `useNaiveForm`，表单验证正常工作
+- [x] `user-operate-drawer.vue` 新增模式显示空白表单，编辑模式填充已有数据
+- [x] `user-operate-drawer.vue` 角色多选使用 VSelect multiple chips 模式
+- [x] `user-operate-drawer.vue` 移动端抽屉全屏展示
+- [x] `index.vue` 使用 VDataTable server-side 模式替代 NDataTable
+- [x] `index.vue` 表格列使用 slot 模式渲染 VChip（性别/状态）、VBtn（操作按钮）
+- [x] `index.vue` 删除确认使用 VDialog 替代 NPopconfirm
+- [x] `index.vue` 行选择使用 VDataTable 的 v-model:selected
+- [x] `index.vue` 无任何 Naive UI 组件导入
+- [x] `index.vue` 桌面端表格固定高度，移动端自适应高度
+- [x] 所有组件使用 TypeScript 类型定义，无 any 类型
+- [x] Vitest 测试基础设施搭建完成，测试命令可正常运行
+- [x] user-search.vue 单元测试通过：渲染、表单绑定、搜索/重置交互
+- [x] user-operate-drawer.vue 单元测试通过：打开/关闭、表单填充、提交验证
+- [x] index.vue 单元测试通过：表格渲染、分页、行选择、编辑/删除交互
+- [x] 桌面端（>=960px）布局正常，表格完整展示、搜索多列布局
+- [x] 平板端（600-959px）布局正常，表格横向滚动、搜索双列布局
+- [x] 移动端（<600px）布局正常，精简分页、搜索单列、抽屉全屏

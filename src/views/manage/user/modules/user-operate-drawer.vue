@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import { useDisplay } from 'vuetify';
 import { jsonClone } from '@sa/utils';
 import { enableStatusOptions, userGenderOptions } from '@/constants/business';
 import { fetchGetAllRoles } from '@/service/api';
-import { useFormRules, useNaiveForm } from '@/hooks/common/form';
+import { useFormRules, useVuetifyForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
   name: 'UserOperateDrawer'
 });
 
+type TableOperateType = 'add' | 'edit';
+
 interface Props {
-  /** the type of operation */
-  operateType: NaiveUI.TableOperateType;
-  /** the edit row data */
+  operateType: TableOperateType;
   rowData?: Api.SystemManage.User | null;
 }
 
@@ -29,11 +30,14 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
-const { formRef, validate, restoreValidation } = useNaiveForm();
+const { mdAndUp } = useDisplay();
+const drawerWidth = computed(() => (mdAndUp.value ? 400 : undefined));
+
+const { formRef, valid, validate, restoreValidation } = useVuetifyForm();
 const { defaultRequiredRule } = useFormRules();
 
 const title = computed(() => {
-  const titles: Record<NaiveUI.TableOperateType, string> = {
+  const titles: Record<TableOperateType, string> = {
     add: $t('page.manage.user.addUser'),
     edit: $t('page.manage.user.editUser')
   };
@@ -61,12 +65,11 @@ function createDefaultModel(): Model {
 
 type RuleKey = Extract<keyof Model, 'userName' | 'status'>;
 
-const rules: Record<RuleKey, App.Global.FormRule> = {
-  userName: defaultRequiredRule,
-  status: defaultRequiredRule
+const rules: Record<RuleKey, App.Global.FormRule[]> = {
+  userName: [defaultRequiredRule],
+  status: [defaultRequiredRule]
 };
 
-/** the enabled role options */
 const roleOptions = ref<CommonType.Option<string>[]>([]);
 
 async function getRoleOptions() {
@@ -78,13 +81,10 @@ async function getRoleOptions() {
       value: item.roleCode
     }));
 
-    // the mock data does not have the roleCode, so fill it
-    // if the real request, remove the following code
     const userRoleOptions = model.value.userRoles.map(item => ({
       label: item,
       value: item
     }));
-    // end
 
     roleOptions.value = [...userRoleOptions, ...options];
   }
@@ -104,10 +104,11 @@ function closeDrawer() {
 
 async function handleSubmit() {
   await validate();
-  // request
-  window.$message?.success($t('common.updateSuccess'));
-  closeDrawer();
-  emit('submitted');
+  if (valid.value) {
+    window.$message?.success($t('common.updateSuccess'));
+    closeDrawer();
+    emit('submitted');
+  }
 }
 
 watch(visible, () => {
@@ -120,48 +121,100 @@ watch(visible, () => {
 </script>
 
 <template>
-  <NDrawer v-model:show="visible" display-directive="show" :width="360">
-    <NDrawerContent :title="title" :native-scrollbar="false" closable>
-      <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem :label="$t('page.manage.user.userName')" path="userName">
-          <NInput v-model:value="model.userName" :placeholder="$t('page.manage.user.form.userName')" />
-        </NFormItem>
-        <NFormItem :label="$t('page.manage.user.userGender')" path="userGender">
-          <NRadioGroup v-model:value="model.userGender">
-            <NRadio v-for="item in userGenderOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
-          </NRadioGroup>
-        </NFormItem>
-        <NFormItem :label="$t('page.manage.user.nickName')" path="nickName">
-          <NInput v-model:value="model.nickName" :placeholder="$t('page.manage.user.form.nickName')" />
-        </NFormItem>
-        <NFormItem :label="$t('page.manage.user.userPhone')" path="userPhone">
-          <NInput v-model:value="model.userPhone" :placeholder="$t('page.manage.user.form.userPhone')" />
-        </NFormItem>
-        <NFormItem :label="$t('page.manage.user.userEmail')" path="email">
-          <NInput v-model:value="model.userEmail" :placeholder="$t('page.manage.user.form.userEmail')" />
-        </NFormItem>
-        <NFormItem :label="$t('page.manage.user.userStatus')" path="status">
-          <NRadioGroup v-model:value="model.status">
-            <NRadio v-for="item in enableStatusOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
-          </NRadioGroup>
-        </NFormItem>
-        <NFormItem :label="$t('page.manage.user.userRole')" path="roles">
-          <NSelect
-            v-model:value="model.userRoles"
-            multiple
-            :options="roleOptions"
-            :placeholder="$t('page.manage.user.form.userRole')"
-          />
-        </NFormItem>
-      </NForm>
-      <template #footer>
-        <NSpace :size="16">
-          <NButton @click="closeDrawer">{{ $t('common.cancel') }}</NButton>
-          <NButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
-        </NSpace>
-      </template>
-    </NDrawerContent>
-  </NDrawer>
+  <VNavigationDrawer
+    v-model="visible"
+    location="right"
+    temporary
+    :width="drawerWidth"
+    :mobile-breakpoint="0"
+    floating
+    order="12"
+  >
+    <div class="flex items-center p-4">
+      <span class="text-xl font-medium">{{ title }}</span>
+      <VSpacer />
+      <VBtn icon variant="text" @click="closeDrawer">
+        <VIcon>mdi-close</VIcon>
+      </VBtn>
+    </div>
+
+    <VDivider />
+
+    <VForm ref="formRef" v-model="valid" class="p-4 pt-0">
+      <VTextField
+        v-model="model.userName"
+        :label="$t('page.manage.user.userName')"
+        :placeholder="$t('page.manage.user.form.userName')"
+        :rules="rules.userName"
+        variant="outlined"
+        density="comfortable"
+        class="mb-2"
+      />
+
+      <VRadioGroup v-model="model.userGender" :label="$t('page.manage.user.userGender')" density="compact" class="mb-2">
+        <VRadio v-for="item in userGenderOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
+      </VRadioGroup>
+
+      <VTextField
+        v-model="model.nickName"
+        :label="$t('page.manage.user.nickName')"
+        :placeholder="$t('page.manage.user.form.nickName')"
+        variant="outlined"
+        density="comfortable"
+        class="mb-2"
+      />
+
+      <VTextField
+        v-model="model.userPhone"
+        :label="$t('page.manage.user.userPhone')"
+        :placeholder="$t('page.manage.user.form.userPhone')"
+        variant="outlined"
+        density="comfortable"
+        class="mb-2"
+      />
+
+      <VTextField
+        v-model="model.userEmail"
+        :label="$t('page.manage.user.userEmail')"
+        :placeholder="$t('page.manage.user.form.userEmail')"
+        variant="outlined"
+        density="comfortable"
+        class="mb-2"
+      />
+
+      <VRadioGroup
+        v-model="model.status"
+        :label="$t('page.manage.user.userStatus')"
+        :rules="rules.status"
+        density="compact"
+        class="mb-2"
+      >
+        <VRadio v-for="item in enableStatusOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
+      </VRadioGroup>
+
+      <VSelect
+        v-model="model.userRoles"
+        :label="$t('page.manage.user.userRole')"
+        :placeholder="$t('page.manage.user.form.userRole')"
+        :items="roleOptions"
+        item-title="label"
+        item-value="value"
+        multiple
+        chips
+        variant="outlined"
+        density="comfortable"
+        class="mb-2"
+      />
+    </VForm>
+
+    <template #append>
+      <VDivider />
+      <div class="flex gap-4 justify-end p-4">
+        <VBtn variant="text" @click="closeDrawer">{{ $t('common.cancel') }}</VBtn>
+        <VBtn color="primary" variant="flat" @click="handleSubmit">{{ $t('common.confirm') }}</VBtn>
+      </div>
+    </template>
+  </VNavigationDrawer>
 </template>
 
 <style scoped></style>

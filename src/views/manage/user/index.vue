@@ -1,15 +1,14 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import { ref } from 'vue';
-import { NButton, NPopconfirm, NTag } from 'naive-ui';
+import { useDisplay } from 'vuetify';
 import { enableStatusRecord, userGenderRecord } from '@/constants/business';
 import { fetchGetUserList } from '@/service/api';
-import { useAppStore } from '../../../stores/modules/app';
-import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
+import { defaultTransform, useVuetifyPaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
 
-const appStore = useAppStore();
+const { mdAndUp } = useDisplay();
 
 const searchParams = ref<Api.SystemManage.UserSearchParams>({
   current: 1,
@@ -22,7 +21,18 @@ const searchParams = ref<Api.SystemManage.UserSearchParams>({
   userEmail: null
 });
 
-const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useNaivePaginatedTable({
+const {
+  headers,
+  columnChecks,
+  data,
+  getData,
+  getDataByPage,
+  loading,
+  serverItems,
+  itemsLength,
+  serverPagination,
+  onLoad
+} = useVuetifyPaginatedTable({
   api: () => fetchGetUserList(searchParams.value),
   transform: response => defaultTransform(response),
   onPaginationParamsChange: params => {
@@ -30,132 +40,40 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     searchParams.value.size = params.pageSize;
   },
   columns: () => [
-    {
-      type: 'selection',
-      align: 'center',
-      width: 48
-    },
-    {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 64,
-      render: (_, index) => index + 1
-    },
-    {
-      key: 'userName',
-      title: $t('page.manage.user.userName'),
-      align: 'center',
-      minWidth: 100
-    },
-    {
-      key: 'userGender',
-      title: $t('page.manage.user.userGender'),
-      align: 'center',
-      width: 100,
-      render: row => {
-        if (row.userGender === null) {
-          return null;
-        }
-
-        const tagMap: Record<Api.SystemManage.UserGender, NaiveUI.ThemeColor> = {
-          1: 'primary',
-          2: 'error'
-        };
-
-        const label = $t(userGenderRecord[row.userGender]);
-
-        return <NTag type={tagMap[row.userGender]}>{label}</NTag>;
-      }
-    },
-    {
-      key: 'nickName',
-      title: $t('page.manage.user.nickName'),
-      align: 'center',
-      minWidth: 100
-    },
-    {
-      key: 'userPhone',
-      title: $t('page.manage.user.userPhone'),
-      align: 'center',
-      width: 120
-    },
-    {
-      key: 'userEmail',
-      title: $t('page.manage.user.userEmail'),
-      align: 'center',
-      minWidth: 200
-    },
-    {
-      key: 'status',
-      title: $t('page.manage.user.userStatus'),
-      align: 'center',
-      width: 100,
-      render: row => {
-        if (row.status === null) {
-          return null;
-        }
-
-        const tagMap: Record<Api.Common.EnableStatus, NaiveUI.ThemeColor> = {
-          1: 'success',
-          2: 'warning'
-        };
-
-        const label = $t(enableStatusRecord[row.status]);
-
-        return <NTag type={tagMap[row.status]}>{label}</NTag>;
-      }
-    },
-    {
-      key: 'operate',
-      title: $t('common.operate'),
-      align: 'center',
-      width: 130,
-      render: row => (
-        <div class="flex-center gap-8px">
-          <NButton type="primary" ghost size="small" onClick={() => edit(row.id)}>
-            {$t('common.edit')}
-          </NButton>
-          <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
-            {{
-              default: () => $t('common.confirmDelete'),
-              trigger: () => (
-                <NButton type="error" ghost size="small">
-                  {$t('common.delete')}
-                </NButton>
-              )
-            }}
-          </NPopconfirm>
-        </div>
-      )
-    }
+    { key: 'index', title: $t('common.index'), align: 'center', width: 80 },
+    { key: 'userName', title: $t('page.manage.user.userName'), align: 'center', minWidth: 100 },
+    { key: 'userGender', title: $t('page.manage.user.userGender'), align: 'center', width: 100 },
+    { key: 'nickName', title: $t('page.manage.user.nickName'), align: 'center', minWidth: 100 },
+    { key: 'userPhone', title: $t('page.manage.user.userPhone'), align: 'center', width: 120 },
+    { key: 'userEmail', title: $t('page.manage.user.userEmail'), align: 'center', minWidth: 200 },
+    { key: 'status', title: $t('page.manage.user.userStatus'), align: 'center', width: 100 },
+    { key: 'operate', title: $t('common.operate'), align: 'center', width: 160, sortable: false }
   ]
 });
 
-const {
-  drawerVisible,
-  operateType,
-  editingData,
-  handleAdd,
-  handleEdit,
-  checkedRowKeys,
-  onBatchDeleted,
-  onDeleted
-  // closeDrawer
-} = useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
+  useTableOperate(data, 'id', getData);
+
+const deleteDialogVisible = ref(false);
+const deleteTargetId = ref<number | null>(null);
 
 async function handleBatchDelete() {
-  // request
   console.log(checkedRowKeys.value);
-
   onBatchDeleted();
 }
 
 function handleDelete(id: number) {
-  // request
-  console.log(id);
+  deleteTargetId.value = id;
+  deleteDialogVisible.value = true;
+}
 
-  onDeleted();
+function confirmDelete() {
+  deleteDialogVisible.value = false;
+  if (deleteTargetId.value !== null) {
+    console.log(deleteTargetId.value);
+    onDeleted();
+    deleteTargetId.value = null;
+  }
 }
 
 function edit(id: number) {
@@ -164,10 +82,10 @@ function edit(id: number) {
 </script>
 
 <template>
-  <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
+  <div class="flex flex-col gap-4 min-h-500px">
     <UserSearch v-model:model="searchParams" @search="getDataByPage" />
-    <NCard :title="$t('page.manage.user.title')" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
-      <template #header-extra>
+    <VCard class="flex-1-hidden" elevation="2" :title="$t('page.manage.user.title')">
+      <template #append>
         <TableHeaderOperation
           v-model:columns="columnChecks"
           :disabled-delete="checkedRowKeys.length === 0"
@@ -177,27 +95,98 @@ function edit(id: number) {
           @refresh="getData"
         />
       </template>
-      <NDataTable
-        v-model:checked-row-keys="checkedRowKeys"
-        :columns="columns"
-        :data="data"
-        size="small"
-        :flex-height="!appStore.isMobile"
-        :scroll-x="962"
-        :loading="loading"
-        remote
-        :row-key="row => row.id"
-        :pagination="mobilePagination"
-        class="sm:h-full"
-      />
-      <UserOperateDrawer
-        v-model:visible="drawerVisible"
-        :operate-type="operateType"
-        :row-data="editingData"
-        @submitted="getDataByPage"
-      />
-    </NCard>
+      <VCardText>
+        <VSheet border>
+          <VDataTableServer
+            v-model="checkedRowKeys"
+            :headers="headers"
+            :items="serverItems"
+            :items-length="itemsLength"
+            :loading="loading ? 'primary' : false"
+            :page="serverPagination.page"
+            :items-per-page="serverPagination.itemsPerPage"
+            :items-per-page-options="[10, 15, 20, 25, 30]"
+            fixed-header
+            show-select
+            select-strategy="page"
+            item-value="id"
+            gridlines="all"
+            density="comfortable"
+            :style="{ height: mdAndUp ? 'calc(100vh - 240px)' : 'auto' }"
+            class="flex-1-hidden"
+            @update:options="onLoad"
+          >
+            <template #header.data-table-select="{ allSelected, selectAll, someSelected }">
+              <VCheckboxBtn
+                :indeterminate="someSelected && !allSelected"
+                :model-value="allSelected"
+                color="primary"
+                @update:model-value="selectAll(!allSelected)"
+              ></VCheckboxBtn>
+            </template>
+            <template #item.data-table-select="{ internalItem, isSelected, toggleSelect }">
+              <VCheckboxBtn
+                :model-value="isSelected(internalItem)"
+                color="primary"
+                @update:model-value="toggleSelect(internalItem)"
+              ></VCheckboxBtn>
+            </template>
+            <template #item.index="{ index }">
+              {{ index + 1 }}
+            </template>
+
+            <template #item.userGender="{ item }">
+              <VChip
+                v-if="item.userGender !== null"
+                :color="item.userGender === '1' ? 'primary' : 'error'"
+                size="small"
+                label
+              >
+                {{ $t(userGenderRecord[item.userGender]) }}
+              </VChip>
+            </template>
+
+            <template #item.status="{ item }">
+              <VChip
+                v-if="item.status !== null"
+                :color="item.status === '1' ? 'success' : 'warning'"
+                size="small"
+                label
+              >
+                {{ $t(enableStatusRecord[item.status]) }}
+              </VChip>
+            </template>
+
+            <template #item.operate="{ item }">
+              <div class="flex gap-2 justify-center">
+                <VBtn size="small" variant="outlined" color="primary" @click="edit(item.id)">
+                  {{ $t('common.edit') }}
+                </VBtn>
+                <VBtn size="small" variant="outlined" color="error" @click="handleDelete(item.id)">
+                  {{ $t('common.delete') }}
+                </VBtn>
+              </div>
+            </template>
+          </VDataTableServer>
+        </VSheet>
+      </VCardText>
+    </VCard>
+    <UserOperateDrawer
+      v-model:visible="drawerVisible"
+      :operate-type="operateType"
+      :row-data="editingData"
+      @submitted="getDataByPage"
+    />
+
+    <VDialog v-model="deleteDialogVisible" max-width="400">
+      <VCard>
+        <VCardText>{{ $t('common.confirmDelete') }}</VCardText>
+        <VCardActions>
+          <VSpacer />
+          <VBtn variant="text" @click="deleteDialogVisible = false">{{ $t('common.cancel') }}</VBtn>
+          <VBtn color="error" variant="text" @click="confirmDelete">{{ $t('common.confirm') }}</VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </div>
 </template>
-
-<style scoped></style>
