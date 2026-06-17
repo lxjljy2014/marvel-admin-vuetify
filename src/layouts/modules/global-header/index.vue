@@ -44,7 +44,7 @@ function handleSwitch(e: PointerEvent) {
 </script>
 
 <template>
-  <VAppBar density="comfortable" :extended="!appStore.fullContent">
+  <VAppBar density="comfortable" :extended="!appStore.fullContent" :height="appStore.fullContent ? '52' : undefined">
     <template #default>
       <div v-show="!appStore.fullContent" class="w-full flex items-center justify-between">
         <VAppBarNavIcon @click="appStore.toggleRail()"></VAppBarNavIcon>

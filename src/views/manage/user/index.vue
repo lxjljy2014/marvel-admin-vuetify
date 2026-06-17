@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useDisplay } from 'vuetify';
 import { enableStatusRecord, userGenderRecord } from '@/constants/business';
 import { fetchGetUserList } from '@/service/api';
 import { defaultTransform, useVuetifyPaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
-import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
-
-const { mdAndUp } = useDisplay();
+import UserOperateDrawer from './modules/user-operate-drawer.vue';
 
 const searchParams = ref<Api.SystemManage.UserSearchParams>({
   current: 1,
@@ -40,13 +37,13 @@ const {
     searchParams.value.size = params.pageSize;
   },
   columns: () => [
-    { key: 'index', title: $t('common.index'), align: 'center', width: 80 },
-    { key: 'userName', title: $t('page.manage.user.userName'), align: 'center', minWidth: 100 },
-    { key: 'userGender', title: $t('page.manage.user.userGender'), align: 'center', width: 100 },
-    { key: 'nickName', title: $t('page.manage.user.nickName'), align: 'center', minWidth: 100 },
-    { key: 'userPhone', title: $t('page.manage.user.userPhone'), align: 'center', width: 120 },
-    { key: 'userEmail', title: $t('page.manage.user.userEmail'), align: 'center', minWidth: 200 },
-    { key: 'status', title: $t('page.manage.user.userStatus'), align: 'center', width: 100 },
+    { key: 'index', title: $t('common.index'), align: 'center', width: 80, sortable: false },
+    { key: 'userName', title: $t('page.manage.user.userName'), align: 'center', minWidth: 100, sortable: false },
+    { key: 'userGender', title: $t('page.manage.user.userGender'), align: 'center', width: 100, sortable: false },
+    { key: 'nickName', title: $t('page.manage.user.nickName'), align: 'center', minWidth: 100, sortable: false },
+    { key: 'userPhone', title: $t('page.manage.user.userPhone'), align: 'center', width: 120, sortable: false },
+    { key: 'userEmail', title: $t('page.manage.user.userEmail'), align: 'center', minWidth: 200, sortable: false },
+    { key: 'status', title: $t('page.manage.user.userStatus'), align: 'center', width: 100, sortable: false },
     { key: 'operate', title: $t('common.operate'), align: 'center', width: 160, sortable: false }
   ]
 });
@@ -58,8 +55,7 @@ const deleteDialogVisible = ref(false);
 const deleteTargetId = ref<number | null>(null);
 
 async function handleBatchDelete() {
-  console.log(checkedRowKeys.value);
-  onBatchDeleted();
+  await onBatchDeleted();
 }
 
 function handleDelete(id: number) {
@@ -82,7 +78,7 @@ function edit(id: number) {
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 min-h-500px">
+  <div class="min-h-500px flex-col-stretch gap-16px">
     <UserSearch v-model:model="searchParams" @search="getDataByPage" />
     <VCard class="flex-1-hidden" elevation="2" :title="$t('page.manage.user.title')">
       <template #append>
@@ -95,8 +91,8 @@ function edit(id: number) {
           @refresh="getData"
         />
       </template>
-      <VCardText>
-        <VSheet border>
+      <VCardText class="h-[calc(100%-56px)] overflow-hidden">
+        <VSheet border class="flex-col h-full">
           <VDataTableServer
             v-model="checkedRowKeys"
             :headers="headers"
@@ -112,8 +108,7 @@ function edit(id: number) {
             item-value="id"
             gridlines="all"
             density="comfortable"
-            :style="{ height: mdAndUp ? 'calc(100vh - 240px)' : 'auto' }"
-            class="flex-1-hidden"
+            class="flex-grow"
             @update:options="onLoad"
           >
             <template #header.data-table-select="{ allSelected, selectAll, someSelected }">
@@ -190,3 +185,9 @@ function edit(id: number) {
     </VDialog>
   </div>
 </template>
+
+<style lang="scss" scoped>
+:deep(.v-table .v-table__wrapper) {
+  flex: 1 1 0;
+}
+</style>

@@ -34,7 +34,7 @@ const newses = computed<NewsItem[]>(() => [
 <template>
   <VCard class="card-wrapper" :title="$t('page.home.projectNews.title')">
     <template #append>
-      <VBtn variant="text" color="primary" size="small" class="text-14px">
+      <VBtn variant="text" color="primary" size="small">
         {{ $t('page.home.projectNews.moreNews') }}
       </VBtn>
     </template>

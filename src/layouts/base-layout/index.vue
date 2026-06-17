@@ -60,6 +60,7 @@ const headerProps = computed(() => {
 
 <template>
   <VApp>
+    <div id="add-navigation-drawer" />
     <ThemeDrawer />
     <GlobalSider />
     <GlobalHeader v-bind="headerProps">

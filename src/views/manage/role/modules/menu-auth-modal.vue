@@ -8,7 +8,6 @@ defineOptions({
 });
 
 interface Props {
-  /** the roleId */
   roleId: number;
 }
 
@@ -33,8 +32,6 @@ async function getHome() {
 }
 
 async function updateHome(val: string) {
-  // request
-
   home.value = val;
 }
 
@@ -71,13 +68,11 @@ const checks = shallowRef<number[]>([]);
 
 async function getChecks() {
   console.log(props.roleId);
-  // request
   checks.value = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 }
 
 function handleSubmit() {
   console.log(checks.value, props.roleId);
-  // request
 
   window.$message?.success?.($t('common.modifySuccess'));
 
@@ -99,32 +94,41 @@ watch(visible, val => {
 </script>
 
 <template>
-  <NModal v-model:show="visible" :title="title" preset="card" class="w-480px">
-    <div class="flex-y-center gap-16px pb-12px">
-      <div>{{ $t('page.manage.menu.home') }}</div>
-      <NSelect :value="home" :options="pageSelectOptions" size="small" class="w-160px" @update:value="updateHome" />
-    </div>
-    <NTree
-      v-model:checked-keys="checks"
-      :data="tree"
-      key-field="id"
-      checkable
-      expand-on-click
-      virtual-scroll
-      block-line
-      class="h-280px"
-    />
-    <template #footer>
-      <NSpace justify="end">
-        <NButton size="small" class="mt-16px" @click="closeModal">
-          {{ $t('common.cancel') }}
-        </NButton>
-        <NButton type="primary" size="small" class="mt-16px" @click="handleSubmit">
-          {{ $t('common.confirm') }}
-        </NButton>
-      </NSpace>
-    </template>
-  </NModal>
+  <VDialog v-model="visible" :max-width="480">
+    <VCard :title="title">
+      <VCardText>
+        <div class="flex items-center gap-16px pb-12px">
+          <div>{{ $t('page.manage.menu.home') }}</div>
+          <VSelect
+            :model-value="home"
+            :items="pageSelectOptions"
+            item-title="label"
+            item-value="value"
+            variant="outlined"
+            density="compact"
+            class="w-160px"
+            hide-details
+            @update:model-value="updateHome"
+          />
+        </div>
+        <VTreeview
+          v-model:selected="checks"
+          :items="tree"
+          item-value="id"
+          item-title="label"
+          item-children="children"
+          selectable
+          density="compact"
+          class="h-280px overflow-y-auto"
+        />
+      </VCardText>
+      <VCardActions>
+        <VSpacer />
+        <VBtn variant="text" @click="closeModal">{{ $t('common.cancel') }}</VBtn>
+        <VBtn variant="text" @click="handleSubmit">{{ $t('common.confirm') }}</VBtn>
+      </VCardActions>
+    </VCard>
+  </VDialog>
 </template>
 
 <style scoped></style>

@@ -61,17 +61,17 @@ export function setupVuetify(app: App) {
         dark: {
           colors: {
             background: '#131216',
-            // 'on-background': '#E6E3ED',
-            // primary: themeSettings.themeColor,
+            'on-background': '#E6E3ED',
+            primary: themeSettings.themeColor,
             surface: '#1C1B1F',
-            'on-surface': '#E6E3ED'
-            // 'surface-variant': '#464653',
-            // 'on-surface-variant': '#C5C2D0',
-            // secondary: '#BCC3F0',
-            // error: themeSettings.otherColor.error,
-            // info: themeSettings.otherColor.info,
-            // success: themeSettings.otherColor.success,
-            // warning: themeSettings.otherColor.warning
+            'on-surface': '#E6E3ED',
+            'surface-variant': '#464653',
+            'on-surface-variant': '#C5C2D0',
+            secondary: '#BCC3F0',
+            error: themeSettings.otherColor.error,
+            info: themeSettings.otherColor.info,
+            success: themeSettings.otherColor.success,
+            warning: themeSettings.otherColor.warning
           },
           variables: {
             'border-color': '#938F99',

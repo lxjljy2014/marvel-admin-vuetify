@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { toRaw } from 'vue';
+import { ref, toRaw } from 'vue';
 import { jsonClone } from '@sa/utils';
 import { enableStatusOptions } from '@/constants/business';
+import { useVuetifyForm } from '@/hooks/common/form';
 import { translateOptions } from '@/utils/common';
 import { $t } from '@/locales';
 
@@ -15,6 +16,10 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
+const { formRef, valid, validate, restoreValidation } = useVuetifyForm();
+
+const panel = ref(['role-search']);
+
 const model = defineModel<Api.SystemManage.RoleSearchParams>('model', { required: true });
 
 const defaultModel = jsonClone(toRaw(model.value));
@@ -23,52 +28,86 @@ function resetModel() {
   Object.assign(model.value, defaultModel);
 }
 
-function search() {
+async function reset() {
+  await restoreValidation();
+  resetModel();
+}
+
+async function search() {
+  await validate();
   emit('search');
 }
 </script>
 
 <template>
-  <NCard :bordered="false" size="small" class="card-wrapper">
-    <NCollapse :default-expanded-names="['role-search']">
-      <NCollapseItem :title="$t('common.search')" name="role-search">
-        <NForm :model="model" label-placement="left" :label-width="80">
-          <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.roleName')" path="roleName" class="pr-24px">
-              <NInput v-model:value="model.roleName" :placeholder="$t('page.manage.role.form.roleName')" />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.roleCode')" path="roleCode" class="pr-24px">
-              <NInput v-model:value="model.roleCode" :placeholder="$t('page.manage.role.form.roleCode')" />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" :label="$t('page.manage.role.roleStatus')" path="status" class="pr-24px">
-              <NSelect
-                v-model:value="model.status"
-                :placeholder="$t('page.manage.role.form.roleStatus')"
-                :options="translateOptions(enableStatusOptions)"
-                clearable
-              />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6">
-              <NSpace class="w-full" justify="end">
-                <NButton @click="resetModel">
-                  <template #icon>
-                    <icon-ic-round-refresh class="text-icon" />
-                  </template>
-                  {{ $t('common.reset') }}
-                </NButton>
-                <NButton type="primary" ghost @click="search">
-                  <template #icon>
-                    <icon-ic-round-search class="text-icon" />
-                  </template>
-                  {{ $t('common.search') }}
-                </NButton>
-              </NSpace>
-            </NFormItemGi>
-          </NGrid>
-        </NForm>
-      </NCollapseItem>
-    </NCollapse>
-  </NCard>
+  <VCard class="card-wrapper">
+    <VExpansionPanels v-model="panel" static elevation="0">
+      <VExpansionPanel value="role-search">
+        <VExpansionPanelTitle>{{ $t('common.search') }}</VExpansionPanelTitle>
+        <VExpansionPanelText>
+          <VForm ref="formRef" v-model="valid">
+            <VRow>
+              <VCol cols="12" sm="6" md="3">
+                <VTextField
+                  v-model="model.roleName"
+                  :label="$t('page.manage.role.roleName')"
+                  :placeholder="$t('page.manage.role.form.roleName')"
+                  variant="outlined"
+                  density="compact"
+                  clearable
+                  color="primary"
+                  hide-details
+                />
+              </VCol>
+              <VCol cols="12" sm="6" md="3">
+                <VTextField
+                  v-model="model.roleCode"
+                  :label="$t('page.manage.role.roleCode')"
+                  :placeholder="$t('page.manage.role.form.roleCode')"
+                  variant="outlined"
+                  density="compact"
+                  clearable
+                  color="primary"
+                  hide-details
+                />
+              </VCol>
+              <VCol cols="12" sm="6" md="3">
+                <VSelect
+                  v-model="model.status"
+                  :label="$t('page.manage.role.roleStatus')"
+                  :placeholder="$t('page.manage.role.form.roleStatus')"
+                  :items="translateOptions(enableStatusOptions)"
+                  item-title="label"
+                  item-value="value"
+                  variant="outlined"
+                  density="compact"
+                  clearable
+                  color="primary"
+                  hide-details
+                />
+              </VCol>
+              <VCol cols="12" sm="6" md="3">
+                <div class="flex gap-2 justify-end">
+                  <VBtn variant="outlined" @click="reset">
+                    <template #prepend>
+                      <VIcon icon="mdi-refresh" />
+                    </template>
+                    {{ $t('common.reset') }}
+                  </VBtn>
+                  <VBtn variant="outlined" color="primary" @click="search">
+                    <template #prepend>
+                      <VIcon icon="mdi-magnify" />
+                    </template>
+                    {{ $t('common.search') }}
+                  </VBtn>
+                </div>
+              </VCol>
+            </VRow>
+          </VForm>
+        </VExpansionPanelText>
+      </VExpansionPanel>
+    </VExpansionPanels>
+  </VCard>
 </template>
 
 <style scoped></style>

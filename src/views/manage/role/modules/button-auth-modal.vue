@@ -7,7 +7,6 @@ defineOptions({
 });
 
 interface Props {
-  /** the roleId */
   roleId: number;
 }
 
@@ -32,7 +31,6 @@ type ButtonConfig = {
 const tree = shallowRef<ButtonConfig[]>([]);
 
 async function getAllButtons() {
-  // request
   tree.value = [
     { id: 1, label: 'button1', code: 'code1' },
     { id: 2, label: 'button2', code: 'code2' },
@@ -51,13 +49,11 @@ const checks = shallowRef<number[]>([]);
 
 async function getChecks() {
   console.log(props.roleId);
-  // request
   checks.value = [1, 2, 3, 4, 5];
 }
 
 function handleSubmit() {
   console.log(checks.value, props.roleId);
-  // request
 
   window.$message?.success?.($t('common.modifySuccess'));
 
@@ -69,33 +65,33 @@ function init() {
   getChecks();
 }
 
-// init
 init();
 </script>
 
 <template>
-  <NModal v-model:show="visible" :title="title" preset="card" class="w-480px">
-    <NTree
-      v-model:checked-keys="checks"
-      :data="tree"
-      key-field="id"
-      block-line
-      checkable
-      expand-on-click
-      virtual-scroll
-      class="h-280px"
-    />
-    <template #footer>
-      <NSpace justify="end">
-        <NButton size="small" class="mt-16px" @click="closeModal">
-          {{ $t('common.cancel') }}
-        </NButton>
-        <NButton type="primary" size="small" class="mt-16px" @click="handleSubmit">
-          {{ $t('common.confirm') }}
-        </NButton>
-      </NSpace>
-    </template>
-  </NModal>
+  <VDialog v-model="visible" :max-width="480">
+    <VCard :title="title">
+      <VCardText>
+        <div class="h-280px overflow-y-auto">
+          <VCheckbox
+            v-for="item in tree"
+            :key="item.id"
+            v-model="checks"
+            :value="item.id"
+            :label="item.label"
+            color="primary"
+            density="compact"
+            hide-details
+          />
+        </div>
+      </VCardText>
+      <VCardActions>
+        <VSpacer />
+        <VBtn variant="text" @click="closeModal">{{ $t('common.cancel') }}</VBtn>
+        <VBtn variant="text" @click="handleSubmit">{{ $t('common.confirm') }}</VBtn>
+      </VCardActions>
+    </VCard>
+  </VDialog>
 </template>
 
 <style scoped></style>

@@ -1,9 +1,8 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import type { SelectOption } from 'naive-ui';
 import { enableStatusOptions, menuIconTypeOptions, menuTypeOptions } from '@/constants/business';
 import { fetchGetAllRoles } from '@/service/api';
-import { useFormRules, useNaiveForm } from '@/hooks/common/form';
+import { useFormRules, useVuetifyForm } from '@/hooks/common/form';
 import { getLocalIcons } from '@/utils/icon';
 import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
@@ -19,14 +18,11 @@ defineOptions({
   name: 'MenuOperateModal'
 });
 
-export type OperateType = NaiveUI.TableOperateType | 'addChild';
+export type OperateType = 'add' | 'edit' | 'addChild';
 
 interface Props {
-  /** the type of operation */
   operateType: OperateType;
-  /** the edit menu data or the parent menu data when adding a child menu */
   rowData?: Api.SystemManage.Menu | null;
-  /** all pages */
   allPages: string[];
 }
 
@@ -42,7 +38,7 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
-const { formRef, validate, restoreValidation } = useNaiveForm();
+const { formRef, valid, validate, restoreValidation } = useVuetifyForm();
 const { defaultRequiredRule } = useFormRules();
 
 const title = computed(() => {
@@ -114,23 +110,18 @@ function createDefaultModel(): Model {
 
 type RuleKey = Extract<keyof Model, 'menuName' | 'status' | 'routeName' | 'routePath'>;
 
-const rules: Record<RuleKey, App.Global.FormRule> = {
-  menuName: defaultRequiredRule,
-  status: defaultRequiredRule,
-  routeName: defaultRequiredRule,
-  routePath: defaultRequiredRule
+const rules: Record<RuleKey, App.Global.FormRule[]> = {
+  menuName: [defaultRequiredRule],
+  status: [defaultRequiredRule],
+  routeName: [defaultRequiredRule],
+  routePath: [defaultRequiredRule]
 };
 
 const disabledMenuType = computed(() => props.operateType === 'edit');
 
 const localIcons = getLocalIcons();
-const localIconOptions = localIcons.map<SelectOption>(item => ({
-  label: () => (
-    <div class="flex-y-center gap-16px">
-      <SvgIcon localIcon={item} class="text-icon" />
-      <span>{item}</span>
-    </div>
-  ),
+const localIconOptions = localIcons.map(item => ({
+  label: item,
   value: item
 }));
 
@@ -164,7 +155,6 @@ const layoutOptions: CommonType.Option[] = [
   }
 ];
 
-/** the enabled role options */
 const roleOptions = ref<CommonType.Option<string>[]>([]);
 
 async function getRoleOptions() {
@@ -237,6 +227,22 @@ function handleCreateButton() {
   return buttonItem;
 }
 
+function addQueryItem() {
+  model.value.query.push({ key: '', value: '' });
+}
+
+function removeQueryItem(index: number) {
+  model.value.query.splice(index, 1);
+}
+
+function addButtonItem() {
+  model.value.buttons.push(handleCreateButton());
+}
+
+function removeButtonItem(index: number) {
+  model.value.buttons.splice(index, 1);
+}
+
 function getSubmitParams() {
   const { layout, page, pathParam, ...params } = model.value;
 
@@ -251,15 +257,15 @@ function getSubmitParams() {
 
 async function handleSubmit() {
   await validate();
+  if (valid.value) {
+    const params = getSubmitParams();
 
-  const params = getSubmitParams();
+    console.log('params: ', params);
 
-  console.log('params: ', params);
-
-  // request
-  window.$message?.success($t('common.updateSuccess'));
-  closeDrawer();
-  emit('submitted');
+    window.$message?.success($t('common.updateSuccess'));
+    closeDrawer();
+    emit('submitted');
+  }
 }
 
 watch(visible, () => {
@@ -280,188 +286,318 @@ watch(
 </script>
 
 <template>
-  <NModal v-model:show="visible" :title="title" preset="card" class="w-800px">
-    <NScrollbar class="h-480px pr-20px">
-      <NForm ref="formRef" :model="model" :rules="rules" label-placement="left" :label-width="100">
-        <NGrid responsive="screen" item-responsive>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.menuType')" path="menuType">
-            <NRadioGroup v-model:value="model.menuType" :disabled="disabledMenuType">
-              <NRadio v-for="item in menuTypeOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
-            </NRadioGroup>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.menuName')" path="menuName">
-            <NInput v-model:value="model.menuName" :placeholder="$t('page.manage.menu.form.menuName')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.routeName')" path="routeName">
-            <NInput v-model:value="model.routeName" :placeholder="$t('page.manage.menu.form.routeName')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.routePath')" path="routePath">
-            <NInput v-model:value="model.routePath" disabled :placeholder="$t('page.manage.menu.form.routePath')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.pathParam')" path="pathParam">
-            <NInput v-model:value="model.pathParam" :placeholder="$t('page.manage.menu.form.pathParam')" />
-          </NFormItemGi>
-          <NFormItemGi v-if="showLayout" span="24 m:12" :label="$t('page.manage.menu.layout')" path="layout">
-            <NSelect
-              v-model:value="model.layout"
-              :options="layoutOptions"
-              :placeholder="$t('page.manage.menu.form.layout')"
-            />
-          </NFormItemGi>
-          <NFormItemGi v-if="showPage" span="24 m:12" :label="$t('page.manage.menu.page')" path="page">
-            <NSelect
-              v-model:value="model.page"
-              :options="pageOptions"
-              :placeholder="$t('page.manage.menu.form.page')"
-            />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.i18nKey')" path="i18nKey">
-            <NInput v-model:value="model.i18nKey" :placeholder="$t('page.manage.menu.form.i18nKey')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.order')" path="order">
-            <NInputNumber v-model:value="model.order" class="w-full" :placeholder="$t('page.manage.menu.form.order')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.iconTypeTitle')" path="iconType">
-            <NRadioGroup v-model:value="model.iconType">
-              <NRadio
-                v-for="item in menuIconTypeOptions"
-                :key="item.value"
-                :value="item.value"
-                :label="$t(item.label)"
+  <VDialog v-model="visible" :max-width="800">
+    <VCard :title="title">
+      <VCardText class="overflow-y-auto" style="max-height: 480px">
+        <VForm ref="formRef" v-model="valid">
+          <VRow>
+            <VCol cols="12" sm="6">
+              <VRadioGroup
+                v-model="model.menuType"
+                :label="$t('page.manage.menu.menuType')"
+                :rules="rules.menuName"
+                density="compact"
+                :disabled="disabledMenuType"
+              >
+                <VRadio v-for="item in menuTypeOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
+              </VRadioGroup>
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VTextField
+                v-model="model.menuName"
+                :label="$t('page.manage.menu.menuName')"
+                :placeholder="$t('page.manage.menu.form.menuName')"
+                :rules="rules.menuName"
+                variant="outlined"
+                density="comfortable"
               />
-            </NRadioGroup>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.icon')" path="icon">
-            <template v-if="model.iconType === '1'">
-              <NInput v-model:value="model.icon" :placeholder="$t('page.manage.menu.form.icon')" class="flex-1">
-                <template #suffix>
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VTextField
+                v-model="model.routeName"
+                :label="$t('page.manage.menu.routeName')"
+                :placeholder="$t('page.manage.menu.form.routeName')"
+                :rules="rules.routeName"
+                variant="outlined"
+                density="comfortable"
+              />
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VTextField
+                v-model="model.routePath"
+                :label="$t('page.manage.menu.routePath')"
+                :placeholder="$t('page.manage.menu.form.routePath')"
+                :rules="rules.routePath"
+                disabled
+                variant="outlined"
+                density="comfortable"
+              />
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VTextField
+                v-model="model.pathParam"
+                :label="$t('page.manage.menu.pathParam')"
+                :placeholder="$t('page.manage.menu.form.pathParam')"
+                variant="outlined"
+                density="comfortable"
+              />
+            </VCol>
+            <VCol v-if="showLayout" cols="12" sm="6">
+              <VSelect
+                v-model="model.layout"
+                :label="$t('page.manage.menu.layout')"
+                :placeholder="$t('page.manage.menu.form.layout')"
+                :items="layoutOptions"
+                item-title="label"
+                item-value="value"
+                variant="outlined"
+                density="comfortable"
+              />
+            </VCol>
+            <VCol v-if="showPage" cols="12" sm="6">
+              <VSelect
+                v-model="model.page"
+                :label="$t('page.manage.menu.page')"
+                :placeholder="$t('page.manage.menu.form.page')"
+                :items="pageOptions"
+                item-title="label"
+                item-value="value"
+                variant="outlined"
+                density="comfortable"
+              />
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VTextField
+                v-model="model.i18nKey"
+                :label="$t('page.manage.menu.i18nKey')"
+                :placeholder="$t('page.manage.menu.form.i18nKey')"
+                variant="outlined"
+                density="comfortable"
+              />
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VTextField
+                v-model="model.order"
+                :label="$t('page.manage.menu.order')"
+                :placeholder="$t('page.manage.menu.form.order')"
+                type="number"
+                variant="outlined"
+                density="comfortable"
+              />
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VRadioGroup v-model="model.iconType" :label="$t('page.manage.menu.iconTypeTitle')" density="compact">
+                <VRadio
+                  v-for="item in menuIconTypeOptions"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="$t(item.label)"
+                />
+              </VRadioGroup>
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VTextField
+                v-if="model.iconType === '1'"
+                v-model="model.icon"
+                :label="$t('page.manage.menu.icon')"
+                :placeholder="$t('page.manage.menu.form.icon')"
+                variant="outlined"
+                density="comfortable"
+              >
+                <template #append-inner>
                   <SvgIcon v-if="model.icon" :icon="model.icon" class="text-icon" />
                 </template>
-              </NInput>
-            </template>
-            <template v-if="model.iconType === '2'">
-              <NSelect
-                v-model:value="model.icon"
+              </VTextField>
+              <VSelect
+                v-if="model.iconType === '2'"
+                v-model="model.icon"
+                :label="$t('page.manage.menu.icon')"
                 :placeholder="$t('page.manage.menu.form.localIcon')"
-                :options="localIconOptions"
+                :items="localIconOptions"
+                item-title="label"
+                item-value="value"
+                variant="outlined"
+                density="comfortable"
+              >
+                <template #item="{ props: itemProps, item }">
+                  <VListItem v-bind="itemProps">
+                    <template #prepend>
+                      <SvgIcon :local-icon="item.value" class="text-icon mr-2" />
+                    </template>
+                  </VListItem>
+                </template>
+                <template #selection="{ item }">
+                  <div class="flex-y-center gap-2">
+                    <SvgIcon :local-icon="item.value" class="text-icon" />
+                    <span>{{ item.label }}</span>
+                  </div>
+                </template>
+              </VSelect>
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VRadioGroup
+                v-model="model.status"
+                :label="$t('page.manage.menu.menuStatus')"
+                :rules="rules.status"
+                density="compact"
+              >
+                <VRadio
+                  v-for="item in enableStatusOptions"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="$t(item.label)"
+                />
+              </VRadioGroup>
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VSwitch
+                v-model="model.keepAlive"
+                :label="$t('page.manage.menu.keepAlive')"
+                color="primary"
+                density="compact"
+                hide-details
               />
-            </template>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.menuStatus')" path="status">
-            <NRadioGroup v-model:value="model.status">
-              <NRadio
-                v-for="item in enableStatusOptions"
-                :key="item.value"
-                :value="item.value"
-                :label="$t(item.label)"
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VSwitch
+                v-model="model.constant"
+                :label="$t('page.manage.menu.constant')"
+                color="primary"
+                density="compact"
+                hide-details
               />
-            </NRadioGroup>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.keepAlive')" path="keepAlive">
-            <NRadioGroup v-model:value="model.keepAlive">
-              <NRadio :value="true" :label="$t('common.yesOrNo.yes')" />
-              <NRadio :value="false" :label="$t('common.yesOrNo.no')" />
-            </NRadioGroup>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.constant')" path="constant">
-            <NRadioGroup v-model:value="model.constant">
-              <NRadio :value="true" :label="$t('common.yesOrNo.yes')" />
-              <NRadio :value="false" :label="$t('common.yesOrNo.no')" />
-            </NRadioGroup>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.href')" path="href">
-            <NInput v-model:value="model.href" :placeholder="$t('page.manage.menu.form.href')" />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.hideInMenu')" path="hideInMenu">
-            <NRadioGroup v-model:value="model.hideInMenu">
-              <NRadio :value="true" :label="$t('common.yesOrNo.yes')" />
-              <NRadio :value="false" :label="$t('common.yesOrNo.no')" />
-            </NRadioGroup>
-          </NFormItemGi>
-          <NFormItemGi
-            v-if="model.hideInMenu"
-            span="24 m:12"
-            :label="$t('page.manage.menu.activeMenu')"
-            path="activeMenu"
-          >
-            <NSelect
-              v-model:value="model.activeMenu"
-              :options="pageOptions"
-              clearable
-              :placeholder="$t('page.manage.menu.form.activeMenu')"
-            />
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.multiTab')" path="multiTab">
-            <NRadioGroup v-model:value="model.multiTab">
-              <NRadio :value="true" :label="$t('common.yesOrNo.yes')" />
-              <NRadio :value="false" :label="$t('common.yesOrNo.no')" />
-            </NRadioGroup>
-          </NFormItemGi>
-          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.fixedIndexInTab')" path="fixedIndexInTab">
-            <NInputNumber
-              v-model:value="model.fixedIndexInTab"
-              class="w-full"
-              clearable
-              :placeholder="$t('page.manage.menu.form.fixedIndexInTab')"
-            />
-          </NFormItemGi>
-          <NFormItemGi span="24" :label="$t('page.manage.menu.query')">
-            <NDynamicInput
-              v-model:value="model.query"
-              preset="pair"
-              :key-placeholder="$t('page.manage.menu.form.queryKey')"
-              :value-placeholder="$t('page.manage.menu.form.queryValue')"
-            >
-              <template #action="{ index, create, remove }">
-                <NSpace class="ml-12px">
-                  <NButton size="medium" @click="() => create(index)">
-                    <icon-ic-round-plus class="text-icon" />
-                  </NButton>
-                  <NButton size="medium" @click="() => remove(index)">
-                    <icon-ic-round-remove class="text-icon" />
-                  </NButton>
-                </NSpace>
-              </template>
-            </NDynamicInput>
-          </NFormItemGi>
-          <NFormItemGi span="24" :label="$t('page.manage.menu.button')">
-            <NDynamicInput v-model:value="model.buttons" :on-create="handleCreateButton">
-              <template #default="{ value }">
-                <div class="flex-y-center flex-1 gap-12px">
-                  <NInput
-                    v-model:value="value.code"
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VTextField
+                v-model="model.href"
+                :label="$t('page.manage.menu.href')"
+                :placeholder="$t('page.manage.menu.form.href')"
+                variant="outlined"
+                density="comfortable"
+              />
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VSwitch
+                v-model="model.hideInMenu"
+                :label="$t('page.manage.menu.hideInMenu')"
+                color="primary"
+                density="compact"
+                hide-details
+              />
+            </VCol>
+            <VCol v-if="model.hideInMenu" cols="12" sm="6">
+              <VSelect
+                v-model="model.activeMenu"
+                :label="$t('page.manage.menu.activeMenu')"
+                :placeholder="$t('page.manage.menu.form.activeMenu')"
+                :items="pageOptions"
+                item-title="label"
+                item-value="value"
+                clearable
+                variant="outlined"
+                density="comfortable"
+              />
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VSwitch
+                v-model="model.multiTab"
+                :label="$t('page.manage.menu.multiTab')"
+                color="primary"
+                density="compact"
+                hide-details
+              />
+            </VCol>
+            <VCol cols="12" sm="6">
+              <VTextField
+                v-model="model.fixedIndexInTab"
+                :label="$t('page.manage.menu.fixedIndexInTab')"
+                :placeholder="$t('page.manage.menu.form.fixedIndexInTab')"
+                type="number"
+                clearable
+                variant="outlined"
+                density="comfortable"
+              />
+            </VCol>
+            <VCol cols="12">
+              <div class="text-body-2 mb-2">{{ $t('page.manage.menu.query') }}</div>
+              <VRow v-for="(queryItem, index) in model.query" :key="index" class="mb-2" align="center">
+                <VCol cols="5">
+                  <VTextField
+                    v-model="queryItem.key"
+                    :placeholder="$t('page.manage.menu.form.queryKey')"
+                    variant="outlined"
+                    density="comfortable"
+                    hide-details
+                  />
+                </VCol>
+                <VCol cols="5">
+                  <VTextField
+                    v-model="queryItem.value"
+                    :placeholder="$t('page.manage.menu.form.queryValue')"
+                    variant="outlined"
+                    density="comfortable"
+                    hide-details
+                  />
+                </VCol>
+                <VCol cols="2" class="flex gap-1">
+                  <VBtn icon size="x-small" variant="text" @click="addQueryItem">
+                    <VIcon size="16">mdi-plus</VIcon>
+                  </VBtn>
+                  <VBtn icon size="x-small" variant="text" @click="removeQueryItem(index)">
+                    <VIcon size="16">mdi-minus</VIcon>
+                  </VBtn>
+                </VCol>
+              </VRow>
+              <VBtn size="small" variant="outlined" @click="addQueryItem">
+                <VIcon start size="16">mdi-plus</VIcon>
+                {{ $t('common.add') }}
+              </VBtn>
+            </VCol>
+            <VCol cols="12">
+              <div class="text-body-2 mb-2">{{ $t('page.manage.menu.button') }}</div>
+              <VRow v-for="(buttonItem, index) in model.buttons" :key="index" class="mb-2" align="center">
+                <VCol cols="5">
+                  <VTextField
+                    v-model="buttonItem.code"
                     :placeholder="$t('page.manage.menu.form.buttonCode')"
-                    class="flex-1"
+                    variant="outlined"
+                    density="comfortable"
+                    hide-details
                   />
-                  <NInput
-                    v-model:value="value.desc"
+                </VCol>
+                <VCol cols="5">
+                  <VTextField
+                    v-model="buttonItem.desc"
                     :placeholder="$t('page.manage.menu.form.buttonDesc')"
-                    class="flex-1"
+                    variant="outlined"
+                    density="comfortable"
+                    hide-details
                   />
-                </div>
-              </template>
-              <template #action="{ index, create, remove }">
-                <NSpace class="ml-12px">
-                  <NButton size="medium" @click="() => create(index)">
-                    <icon-ic-round-plus class="text-icon" />
-                  </NButton>
-                  <NButton size="medium" @click="() => remove(index)">
-                    <icon-ic-round-remove class="text-icon" />
-                  </NButton>
-                </NSpace>
-              </template>
-            </NDynamicInput>
-          </NFormItemGi>
-        </NGrid>
-      </NForm>
-    </NScrollbar>
-    <template #footer>
-      <NSpace justify="end" :size="16">
-        <NButton @click="closeDrawer">{{ $t('common.cancel') }}</NButton>
-        <NButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
-      </NSpace>
-    </template>
-  </NModal>
+                </VCol>
+                <VCol cols="2" class="flex gap-1">
+                  <VBtn icon size="x-small" variant="text" @click="addButtonItem">
+                    <VIcon size="16">mdi-plus</VIcon>
+                  </VBtn>
+                  <VBtn icon size="x-small" variant="text" @click="removeButtonItem(index)">
+                    <VIcon size="16">mdi-minus</VIcon>
+                  </VBtn>
+                </VCol>
+              </VRow>
+              <VBtn size="small" variant="outlined" @click="addButtonItem">
+                <VIcon start size="16">mdi-plus</VIcon>
+                {{ $t('common.add') }}
+              </VBtn>
+            </VCol>
+          </VRow>
+        </VForm>
+      </VCardText>
+      <VCardActions>
+        <VSpacer />
+        <VBtn variant="text" @click="closeDrawer">{{ $t('common.cancel') }}</VBtn>
+        <VBtn color="primary" variant="flat" @click="handleSubmit">{{ $t('common.confirm') }}</VBtn>
+      </VCardActions>
+    </VCard>
+  </VDialog>
 </template>
 
 <style scoped></style>

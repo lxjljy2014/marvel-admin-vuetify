@@ -17,18 +17,11 @@ function loginOrRegister() {
 
 type DropdownKey = 'logout' | 'user-center';
 
-type DropdownOption =
-  | {
-      key: DropdownKey;
-      label: string;
-      icon?: string;
-    }
-  | {
-      type: 'divider';
-      key: string;
-      icon?: string;
-      label?: string;
-    };
+type DropdownOption = {
+  key: DropdownKey;
+  label: string;
+  icon?: string;
+};
 
 const options = computed(() => {
   const opts: DropdownOption[] = [
@@ -36,10 +29,6 @@ const options = computed(() => {
       label: $t('common.logout'),
       key: 'logout',
       icon: 'mdi-logout'
-    },
-    {
-      type: 'divider',
-      key: 'divider'
     },
     {
       label: $t('route.user-center'),
@@ -76,7 +65,7 @@ function handleDropdown(key: DropdownKey) {
   <VBtn v-if="!authStore.isLogin" variant="text" height="40" @click="loginOrRegister">
     {{ $t('page.login.common.loginOrRegister') }}
   </VBtn>
-  <VMenu v-else>
+  <VMenu v-else location="bottom end">
     <template #activator="{ props: menuProps }">
       <div v-bind="menuProps">
         <VBtn prepend-icon="mdi-account-circle" height="40" class="mr-4">
@@ -92,6 +81,7 @@ function handleDropdown(key: DropdownKey) {
       density="compact"
       nav
       slim
+      prepend-gap="12"
       @click:select="value => handleDropdown(value.id as DropdownKey)"
     >
       <template #prepend="{ item }">

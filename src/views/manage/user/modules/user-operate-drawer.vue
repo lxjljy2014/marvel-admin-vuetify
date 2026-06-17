@@ -121,15 +121,7 @@ watch(visible, () => {
 </script>
 
 <template>
-  <VNavigationDrawer
-    v-model="visible"
-    location="right"
-    temporary
-    :width="drawerWidth"
-    :mobile-breakpoint="0"
-    floating
-    order="12"
-  >
+  <VNavigationDrawer v-model="visible" location="right" temporary :width="drawerWidth" :mobile-breakpoint="0">
     <div class="flex items-center p-4">
       <span class="text-xl font-medium">{{ title }}</span>
       <VSpacer />
