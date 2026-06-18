@@ -62,5 +62,6 @@ function resetScroll() {
 :deep(.v-main__scroller) {
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 </style>

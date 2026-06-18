@@ -80,7 +80,7 @@ function edit(id: number) {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px">
     <UserSearch v-model:model="searchParams" @search="getDataByPage" />
-    <VCard class="flex-1-hidden" elevation="2" :title="$t('page.manage.user.title')">
+    <VCard class="flex-col flex-1-hidden" elevation="2" :title="$t('page.manage.user.title')">
       <template #append>
         <TableHeaderOperation
           v-model:columns="columnChecks"
@@ -91,8 +91,8 @@ function edit(id: number) {
           @refresh="getData"
         />
       </template>
-      <VCardText class="h-[calc(100%-56px)] overflow-hidden">
-        <VSheet border class="flex-col h-full">
+      <VCardText class="flex-grow flex-col">
+        <VSheet border class="flex-grow flex-col">
           <VDataTableServer
             v-model="checkedRowKeys"
             :headers="headers"
@@ -108,7 +108,7 @@ function edit(id: number) {
             item-value="id"
             gridlines="all"
             density="comfortable"
-            class="flex-grow"
+            class="flex-grow [&_.v-table\_\_wrapper]:flex-basis-0!"
             @update:options="onLoad"
           >
             <template #header.data-table-select="{ allSelected, selectAll, someSelected }">
@@ -187,7 +187,7 @@ function edit(id: number) {
 </template>
 
 <style lang="scss" scoped>
-:deep(.v-table .v-table__wrapper) {
-  flex: 1 1 0;
-}
+// :deep(.v-table .v-table__wrapper) {
+//   flex: 1 1 0;
+// }
 </style>
