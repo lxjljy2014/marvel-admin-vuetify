@@ -87,13 +87,13 @@ const swiperExample: SwiperExample[] = [
 
 <template>
   <div>
-    <NCard title="Swiper插件" :bordered="false" class="card-wrapper">
-      <NSpace :vertical="true">
+    <VCard :flat="true" title="Swiper插件" class="card-wrapper">
+      <div class="flex flex-col gap-16px">
         <GithubLink link="https://github.com/nolimits4web/swiper" />
         <WebSiteLink label="vue3版文档地址：" link="https://swiperjs.com/vue" />
         <WebSiteLink label="插件demo地址：" link="https://swiperjs.com/demos" />
-      </NSpace>
-      <NSpace :vertical="true">
+      </div>
+      <div class="flex flex-col gap-16px">
         <div v-for="item in swiperExample" :key="item.id">
           <h3 class="py-24px text-24px font-bold">{{ item.label }}</h3>
           <Swiper v-bind="item.options">
@@ -102,8 +102,8 @@ const swiperExample: SwiperExample[] = [
             </SwiperSlide>
           </Swiper>
         </div>
-      </NSpace>
-    </NCard>
+      </div>
+    </VCard>
   </div>
 </template>
 

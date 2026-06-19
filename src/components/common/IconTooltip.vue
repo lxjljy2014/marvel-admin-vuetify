@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, useSlots } from 'vue';
-import type { PopoverPlacement } from 'naive-ui';
+import type { Anchor } from 'vuetify';
 
 defineOptions({ name: 'IconTooltip' });
 
@@ -8,7 +8,7 @@ interface Props {
   icon?: string;
   localIcon?: string;
   desc?: string;
-  placement?: PopoverPlacement;
+  placement?: Anchor;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -27,10 +27,10 @@ if (!hasCustomTrigger.value && !props.icon && !props.localIcon) {
 </script>
 
 <template>
-  <NTooltip :placement="placement">
-    <template #trigger>
+  <VTooltip :location="placement">
+    <template #activator="{ props: activatorProps }">
       <slot name="trigger">
-        <div class="cursor-pointer">
+        <div v-bind="activatorProps" class="cursor-pointer">
           <SvgIcon :icon="icon" :local-icon="localIcon" />
         </div>
       </slot>
@@ -38,5 +38,5 @@ if (!hasCustomTrigger.value && !props.icon && !props.localIcon) {
     <slot>
       <span>{{ desc }}</span>
     </slot>
-  </NTooltip>
+  </VTooltip>
 </template>

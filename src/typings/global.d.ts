@@ -2,18 +2,12 @@ export {};
 
 declare global {
   export interface Window {
-    /** NProgress instance */
     NProgress?: import('nprogress').NProgress;
-    /** Loading bar instance */
-    $loadingBar?: import('naive-ui').LoadingBarProviderInst;
-    /** Dialog instance */
-    $dialog?: import('naive-ui').DialogProviderInst;
-    /** Message instance */
-    $message?: import('naive-ui').MessageProviderInst;
-    /** Notification instance */
-    $notification?: import('naive-ui').NotificationProviderInst;
+    $loadingBar?: typeof import('@/plugins/vuetify-feedback').loadingBarApi;
+    $dialog?: typeof import('@/plugins/vuetify-feedback').dialogApi;
+    $message?: typeof import('@/plugins/vuetify-feedback').messageApi;
+    $notification?: typeof import('@/plugins/vuetify-feedback').notificationApi;
   }
 
-  /** Build time of the project */
   export const BUILD_TIME: string;
 }

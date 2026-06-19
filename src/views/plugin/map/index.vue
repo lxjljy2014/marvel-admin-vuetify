@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Component } from 'vue';
+import { ref } from 'vue';
 import { BaiduMap, GaodeMap, TencentMap } from './components';
 
 interface Map {
@@ -13,17 +14,24 @@ const maps: Map[] = [
   { id: 'tencent', label: '腾讯地图', component: TencentMap },
   { id: 'baidu', label: '百度地图', component: BaiduMap }
 ];
+
+const activeTab = ref('gaode');
 </script>
 
 <template>
   <div class="h-full">
-    <NCard title="地图插件" :bordered="false" class="h-full card-wrapper" content-style="overflow:hidden">
-      <NTabs type="line" class="h-full flex-col-stretch" pane-class="flex-1-hidden">
-        <NTabPane v-for="item in maps" :key="item.id" :name="item.id" :tab="item.label">
+    <VCard :flat="true" title="地图插件" class="h-full card-wrapper">
+      <VTabs v-model="activeTab">
+        <VTab v-for="item in maps" :key="item.id" :value="item.id">
+          {{ item.label }}
+        </VTab>
+      </VTabs>
+      <VWindow v-model="activeTab" class="flex-1-hidden">
+        <VWindowItem v-for="item in maps" :key="item.id" :value="item.id">
           <component :is="item.component" />
-        </NTabPane>
-      </NTabs>
-    </NCard>
+        </VWindowItem>
+      </VWindow>
+    </VCard>
   </div>
 </template>
 

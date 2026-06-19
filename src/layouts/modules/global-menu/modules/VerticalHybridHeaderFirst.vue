@@ -8,10 +8,10 @@ import { GLOBAL_HEADER_MENU_ID, GLOBAL_SIDER_MENU_ID } from '@/constants/app';
 import { useAppStore } from '../../../../stores/modules/app';
 import { useThemeStore } from '../../../../stores/modules/theme';
 import { useRouteStore } from '../../../../stores/modules/route';
-import { useRouterPush } from '@/hooks/common/router';
 import { useMenu, useMixMenuContext } from '../context';
 import FirstLevelMenu from '../components/FirstLevelMenu.vue';
 import GlobalLogo from '../../global-logo/index.vue';
+import ListGroup from '@/layouts/modules/global-menu/components/ListGroup.vue';
 
 defineOptions({
   name: 'VerticalHybridHeaderFirst'
@@ -21,7 +21,6 @@ const route = useRoute();
 const appStore = useAppStore();
 const themeStore = useThemeStore();
 const routeStore = useRouteStore();
-const { routerPushByKeyWithMetaQuery } = useRouterPush();
 const { bool: drawerVisible, setBool: setDrawerVisible } = useBoolean();
 const {
   firstLevelMenus,
@@ -51,11 +50,6 @@ function handleSelectMixMenu(key: RouteKey) {
   }
 }
 
-/**
- * Handle second level menu selection based on autoSelectFirstMenu setting:
- * - When disabled: Activate first second-level menu for display only, expand third-level menu if exists
- * - When enabled: Navigate to the deepest menu automatically
- */
 function handleSelectMenu(key: RouteKey) {
   handleSelectFirstLevelMenu(key);
 
@@ -63,19 +57,15 @@ function handleSelectMenu(key: RouteKey) {
 
   const secondFirstMenuKey = secondLevelMenus.value[0].routeKey;
 
-  // Case 1: autoSelectFirstMenu disabled - only activate menu for display
   if (!themeStore.sider.autoSelectFirstMenu) {
-    // Check if there are third-level menus
     const hasChildren = secondLevelMenus.value.find(menu => menu.key === secondFirstMenuKey)?.children?.length;
 
-    // If there are third-level menus, expand them
     if (hasChildren) {
       handleSelectMixMenu(secondFirstMenuKey);
     }
     return;
   }
 
-  // Case 2: autoSelectFirstMenu enabled - navigate to deepest menu
   activeDeepestLevelMenuKey();
   setDrawerVisible(false);
 }
@@ -110,14 +100,18 @@ watch(
 
 <template>
   <Teleport :to="`#${GLOBAL_HEADER_MENU_ID}`">
-    <NMenu
-      mode="horizontal"
-      :value="activeFirstLevelMenuKey"
-      :options="firstLevelMenus"
-      :indent="18"
-      responsive
-      @update:value="handleSelectMenu"
-    />
+    <div class="flex items-center h-full">
+      <VBtn
+        v-for="menu in firstLevelMenus"
+        :key="menu.routeKey"
+        variant="text"
+        :prepend-icon="menu.icon"
+        :active="menu.key === activeFirstLevelMenuKey"
+        @click="handleSelectMenu(menu.routeKey)"
+      >
+        {{ menu.label }}
+      </VBtn>
+    </div>
   </Teleport>
   <Teleport :to="`#${GLOBAL_SIDER_MENU_ID}`">
     <div class="h-full flex" @mouseleave="handleResetActiveMenu">
@@ -153,15 +147,18 @@ watch(
             />
           </header>
           <SimpleScrollbar>
-            <NMenu
-              v-model:expanded-keys="expandedKeys"
-              mode="vertical"
-              :value="selectedKey"
-              :options="childLevelMenus"
-              :inverted="inverted"
-              :indent="18"
-              @update:value="routerPushByKeyWithMetaQuery"
-            />
+            <VList color="primary" density="comfortable" nav prepend-gap="16" indent="16">
+              <template v-for="menu in childLevelMenus" :key="menu.routeKey">
+                <ListGroup v-if="menu.children" :menu="menu" />
+                <VListItem
+                  v-else
+                  :prepend-icon="menu.icon"
+                  :value="menu.routePath"
+                  :title="menu.label"
+                  :to="menu.routePath"
+                />
+              </template>
+            </VList>
           </SimpleScrollbar>
         </DarkModeContainer>
       </div>

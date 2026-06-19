@@ -8,6 +8,7 @@ interface MessageItem {
   type: MessageType;
   content: string;
   duration: number;
+  onLeave?: () => void;
 }
 
 interface MessageReactive {
@@ -20,6 +21,8 @@ interface DialogOptions {
   type?: 'info' | 'success' | 'warning' | 'error';
   positiveText?: string;
   negativeText?: string;
+  maskClosable?: boolean;
+  closeOnEsc?: boolean;
   onPositiveClick?: () => void | Promise<void>;
   onNegativeClick?: () => void | Promise<void>;
   onClose?: () => void;
@@ -61,12 +64,20 @@ const loadingBarState = reactive<LoadingBarState>({ loading: false, error: false
 
 function removeMessage(id: number) {
   const index = messages.findIndex(m => m.id === id);
-  if (index > -1) messages.splice(index, 1);
+  if (index > -1) {
+    const item = messages[index];
+    item.onLeave?.();
+    messages.splice(index, 1);
+  }
 }
 
 function removeNotification(id: number) {
   const index = notifications.findIndex(n => n.id === id);
-  if (index > -1) notifications.splice(index, 1);
+  if (index > -1) {
+    const item = notifications[index];
+    item.onClose?.();
+    notifications.splice(index, 1);
+  }
 }
 
 const messageTypeColorMap: Record<MessageType, string> = {
@@ -86,6 +97,11 @@ function createMessage(content: string, options?: Partial<MessageItem>): Message
     setTimeout(() => removeMessage(id), duration);
   }
   return { destroy: () => removeMessage(id) };
+}
+
+function closeDialog() {
+  dialogState.onClose?.();
+  dialogState.visible = false;
 }
 
 function createDialog(options: DialogOptions) {
@@ -113,6 +129,7 @@ export const feedbackDialog = dialogState;
 export const feedbackNotifications = notifications;
 export const feedbackLoadingBar = loadingBarState;
 export const feedbackMessageTypeColorMap = messageTypeColorMap;
+export const closeFeedbackDialog = closeDialog;
 
 export const messageApi = {
   create: createMessage,

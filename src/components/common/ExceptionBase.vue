@@ -8,13 +8,6 @@ defineOptions({ name: 'ExceptionBase' });
 type ExceptionType = '403' | '404' | '500';
 
 interface Props {
-  /**
-   * Exception type
-   *
-   * - 403: no permission
-   * - 404: not found
-   * - 500: service error
-   */
   type: ExceptionType;
 }
 
@@ -36,8 +29,6 @@ const icon = computed(() => iconMap[props.type]);
     <div class="flex text-400px text-primary">
       <SvgIcon :local-icon="icon" />
     </div>
-    <NButton type="primary" @click="routerPushByKey('root')">{{ $t('common.backToHome') }}</NButton>
+    <VBtn color="primary" @click="routerPushByKey('root')">{{ $t('common.backToHome') }}</VBtn>
   </div>
 </template>
-
-<style scoped></style>

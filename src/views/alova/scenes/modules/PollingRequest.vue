@@ -24,18 +24,18 @@ const toggleStop = () => {
 </script>
 
 <template>
-  <NSpace vertical>
-    <NAlert type="info">
+  <div class="flex flex-col gap-16px">
+    <VAlert type="info">
       {{ $t('page.alova.scenes.pollingRequestTips') }}
-    </NAlert>
-    <NButton type="primary" @click="toggleStop">
+    </VAlert>
+    <VBtn color="primary" @click="toggleStop">
       <icon-carbon-play v-if="isStop" class="mr-2" />
       <icon-carbon-stop v-else class="mr-2" />
       {{ isStop ? $t('page.alova.scenes.startRequest') : $t('page.alova.scenes.stopRequest') }}
-    </NButton>
-    <NSpace align="center">
+    </VBtn>
+    <div class="flex items-center gap-8px">
       <span>{{ $t('page.alova.scenes.refreshTime') }}: {{ data.time || '--' }}</span>
-      <NSpin v-if="loading" :size="12" />
-    </NSpace>
-  </NSpace>
+      <VProgressCircular v-if="loading" indeterminate :size="12" />
+    </div>
+  </div>
 </template>

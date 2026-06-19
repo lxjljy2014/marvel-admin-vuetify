@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { actionDelegationMiddleware, useCaptcha, useForm } from '@sa/alova/client';
-import { useFormRules, useNaiveForm } from '@/hooks/common/form';
+import { useFormRules, useVuetifyForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { sendCaptcha, verifyCaptcha } from '@/service-alova/api';
 
@@ -28,7 +28,7 @@ const {
   }
 });
 
-const { formRef, validate } = useNaiveForm();
+const { formRef, valid, validate } = useVuetifyForm();
 
 const rules = computed<Record<keyof typeof form.value, App.Global.FormRule[]>>(() => {
   const { formRules } = useFormRules();
@@ -41,31 +41,53 @@ const rules = computed<Record<keyof typeof form.value, App.Global.FormRule[]>>((
 
 async function handleSubmit() {
   await validate();
-  await submit();
-  // request
-  window.$message?.success($t('page.login.common.validateSuccess'));
+  if (valid.value) {
+    await submit();
+    window.$message?.success($t('page.login.common.validateSuccess'));
+  }
 }
 </script>
 
 <template>
-  <NForm ref="formRef" :model="form" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
-    <NFormItem path="phone">
-      <NInput v-model:value="form.phone" :placeholder="$t('page.login.common.phonePlaceholder')" :maxlength="11" />
-    </NFormItem>
-    <NFormItem path="code">
-      <div class="w-full flex-y-center gap-16px">
-        <NInput v-model:value="form.code" :placeholder="$t('page.login.common.codePlaceholder')" />
-        <NButton size="large" :disabled="countdown > 0" :loading="loading" @click="send(form.phone)">
-          {{ label }}
-        </NButton>
-      </div>
-    </NFormItem>
-    <NSpace vertical :size="18" class="w-full">
-      <NButton type="primary" size="large" round block :loading="submiting" @click="handleSubmit">
+  <VForm ref="formRef" v-model="valid" @keyup.enter="handleSubmit">
+    <VTextField
+      v-model="form.phone"
+      :placeholder="$t('page.login.common.phonePlaceholder')"
+      :maxlength="11"
+      :rules="rules.phone"
+      variant="outlined"
+      density="comfortable"
+      color="primary"
+      class="mb-2"
+    />
+    <div class="flex items-center gap-4 mb-4">
+      <VTextField
+        v-model="form.code"
+        :placeholder="$t('page.login.common.codePlaceholder')"
+        :rules="rules.code"
+        variant="outlined"
+        density="comfortable"
+        color="primary"
+        class="flex-1 mb-2"
+      >
+        <template #append>
+          <VBtn
+            size="large"
+            :disabled="countdown > 0"
+            :loading="loading"
+            variant="outlined"
+            height="48"
+            @click="send(form.phone)"
+          >
+            {{ label }}
+          </VBtn>
+        </template>
+      </VTextField>
+    </div>
+    <div class="flex flex-col gap-18px w-full">
+      <VBtn color="primary" size="large" rounded="pill" block :loading="submiting" @click="handleSubmit">
         {{ $t('common.confirm') }}
-      </NButton>
-    </NSpace>
-  </NForm>
+      </VBtn>
+    </div>
+  </VForm>
 </template>
-
-<style scoped></style>

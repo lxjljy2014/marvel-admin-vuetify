@@ -9,7 +9,7 @@ const localIcons = ['custom-icon', 'activity', 'at-sign', 'cast', 'chrome', 'cop
 
 <template>
   <div class="h-full">
-    <NCard title="Icon组件示例" :bordered="false" class="card-wrapper">
+    <VCard :flat="true" title="Icon组件示例" class="card-wrapper">
       <div class="grid grid-cols-10">
         <template v-for="item in icons" :key="item">
           <div class="mt-5px flex-x-center">
@@ -21,11 +21,11 @@ const localIcons = ['custom-icon', 'activity', 'at-sign', 'cast', 'chrome', 'cop
         <h1 class="mb-20px text-18px font-500">Icon图标选择器</h1>
         <CustomIconSelect v-model:value="selectValue" :icons="icons" />
       </div>
-      <template #footer>
+      <template #actions>
         <WebSiteLink label="iconify地址：" link="https://icones.js.org/" class="mt-10px" />
       </template>
-    </NCard>
-    <NCard title="自定义图标示例" :bordered="false" class="mt-10px card-wrapper">
+    </VCard>
+    <VCard :flat="true" title="自定义图标示例" class="mt-10px card-wrapper">
       <div class="pb-12px text-16px">
         在src/assets/svg-icon文件夹下的svg文件，通过在template里面以 icon - local - {文件名} 直接渲染,
         其中icon-local为.env文件里的 VITE_ICON_LOCAL_PREFIX
@@ -44,7 +44,7 @@ const localIcons = ['custom-icon', 'activity', 'at-sign', 'cast', 'chrome', 'cop
           <SvgIcon :local-icon="fileName" class="text-30px text-primary" />
         </div>
       </div>
-    </NCard>
+    </VCard>
   </div>
 </template>
 

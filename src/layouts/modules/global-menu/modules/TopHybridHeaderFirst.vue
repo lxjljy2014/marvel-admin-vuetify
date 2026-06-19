@@ -5,10 +5,9 @@ import { SimpleScrollbar } from '@sa/materials';
 import type { RouteKey } from '@elegant-router/types';
 import { GLOBAL_HEADER_MENU_ID, GLOBAL_SIDER_MENU_ID } from '@/constants/app';
 import { useAppStore } from '../../../../stores/modules/app';
-import { useThemeStore } from '../../../../stores/modules/theme';
 import { useRouteStore } from '../../../../stores/modules/route';
-import { useRouterPush } from '@/hooks/common/router';
 import { useMenu, useMixMenuContext } from '../context';
+import ListGroup from '@/layouts/modules/global-menu/components/ListGroup.vue';
 
 defineOptions({
   name: 'TopHybridHeaderFirst'
@@ -16,9 +15,7 @@ defineOptions({
 
 const route = useRoute();
 const appStore = useAppStore();
-const themeStore = useThemeStore();
 const routeStore = useRouteStore();
-const { routerPushByKeyWithMetaQuery } = useRouterPush();
 const {
   firstLevelMenus,
   secondLevelMenus,
@@ -30,14 +27,8 @@ const { selectedKey } = useMenu();
 
 const expandedKeys = ref<string[]>([]);
 
-/**
- * Handle first level menu select
- * @param key RouteKey
- */
 function handleSelectMenu(key: RouteKey) {
   handleSelectFirstLevelMenu(key);
-
-  // if there are second level menus, select the deepest one by default
   activeDeepestLevelMenuKey();
 }
 
@@ -60,28 +51,33 @@ watch(
 
 <template>
   <Teleport :to="`#${GLOBAL_HEADER_MENU_ID}`">
-    <NMenu
-      mode="horizontal"
-      :value="activeFirstLevelMenuKey"
-      :options="firstLevelMenus"
-      :indent="18"
-      responsive
-      @update:value="handleSelectMenu"
-    />
+    <div class="flex items-center h-full">
+      <VBtn
+        v-for="menu in firstLevelMenus"
+        :key="menu.routeKey"
+        variant="text"
+        :prepend-icon="menu.icon"
+        :active="menu.key === activeFirstLevelMenuKey"
+        @click="handleSelectMenu(menu.routeKey)"
+      >
+        {{ menu.label }}
+      </VBtn>
+    </div>
   </Teleport>
   <Teleport :to="`#${GLOBAL_SIDER_MENU_ID}`">
     <SimpleScrollbar>
-      <NMenu
-        v-model:expanded-keys="expandedKeys"
-        mode="vertical"
-        :value="selectedKey"
-        :collapsed="appStore.siderCollapse"
-        :collapsed-width="themeStore.sider.collapsedWidth"
-        :collapsed-icon-size="22"
-        :options="secondLevelMenus"
-        :indent="18"
-        @update:value="routerPushByKeyWithMetaQuery"
-      />
+      <VList color="primary" density="comfortable" nav prepend-gap="16" indent="16">
+        <template v-for="menu in secondLevelMenus" :key="menu.routeKey">
+          <ListGroup v-if="menu.children" :menu="menu" />
+          <VListItem
+            v-else
+            :prepend-icon="menu.icon"
+            :value="menu.routePath"
+            :title="menu.label"
+            :to="menu.routePath"
+          />
+        </template>
+      </VList>
     </SimpleScrollbar>
   </Teleport>
 </template>

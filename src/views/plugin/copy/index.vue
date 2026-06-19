@@ -24,11 +24,11 @@ async function handleCopy() {
 
 <template>
   <div class="h-full">
-    <NCard title="文本复制" :bordered="false" class="h-full card-wrapper">
-      <NInputGroup>
-        <NInput v-model:value="source" placeholder="请输入要复制的内容吧" />
-        <NButton type="primary" @click="handleCopy">复制</NButton>
-      </NInputGroup>
-    </NCard>
+    <VCard :flat="true" title="文本复制" class="h-full card-wrapper">
+      <div class="flex gap-8px">
+        <VTextField v-model="source" placeholder="请输入要复制的内容吧" density="compact" hide-details />
+        <VBtn color="primary" @click="handleCopy">复制</VBtn>
+      </div>
+    </VCard>
   </div>
 </template>

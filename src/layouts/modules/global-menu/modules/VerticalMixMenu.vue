@@ -8,11 +8,11 @@ import { GLOBAL_SIDER_MENU_ID } from '@/constants/app';
 import { useAppStore } from '../../../../stores/modules/app';
 import { useThemeStore } from '../../../../stores/modules/theme';
 import { useRouteStore } from '../../../../stores/modules/route';
-import { useRouterPush } from '@/hooks/common/router';
 import { $t } from '@/locales';
 import { useMenu, useMixMenuContext } from '../context';
 import FirstLevelMenu from '../components/FirstLevelMenu.vue';
 import GlobalLogo from '../../global-logo/index.vue';
+import ListGroup from '@/layouts/modules/global-menu/components/ListGroup.vue';
 
 defineOptions({
   name: 'VerticalMixMenu'
@@ -22,7 +22,6 @@ const route = useRoute();
 const appStore = useAppStore();
 const themeStore = useThemeStore();
 const routeStore = useRouteStore();
-const { routerPushByKeyWithMetaQuery } = useRouterPush();
 const { bool: drawerVisible, setBool: setDrawerVisible } = useBoolean();
 const {
   firstLevelMenus,
@@ -108,15 +107,18 @@ watch(
             />
           </header>
           <SimpleScrollbar>
-            <NMenu
-              v-model:expanded-keys="expandedKeys"
-              mode="vertical"
-              :value="selectedKey"
-              :options="secondLevelMenus"
-              :inverted="inverted"
-              :indent="18"
-              @update:value="routerPushByKeyWithMetaQuery"
-            />
+            <VList color="primary" density="comfortable" nav prepend-gap="16" indent="16">
+              <template v-for="menu in secondLevelMenus" :key="menu.routeKey">
+                <ListGroup v-if="menu.children" :menu="menu" />
+                <VListItem
+                  v-else
+                  :prepend-icon="menu.icon"
+                  :value="menu.routePath"
+                  :title="menu.label"
+                  :to="menu.routePath"
+                />
+              </template>
+            </VList>
           </SimpleScrollbar>
         </DarkModeContainer>
       </div>

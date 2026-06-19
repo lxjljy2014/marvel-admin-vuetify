@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import JsBarcode from 'jsbarcode';
 import type { Options } from 'jsbarcode';
+import { SimpleScrollbar } from '@sa/materials';
 
 const text = 'Soybean';
 
@@ -96,18 +97,18 @@ onMounted(() => {
 
 <template>
   <div class="overflow-hidden">
-    <NCard title="条形码" :bordered="false" class="h-full card-wrapper" content-class="overflow-hidden">
-      <NScrollbar class="h-full">
-        <NGrid cols="1 s:2 l:3" :x-gap="12" :y-gap="24" responsive="screen" item-responsive>
-          <NGi v-for="item in codes" :key="item.id">
+    <VCard :flat="true" title="条形码" class="h-full card-wrapper">
+      <SimpleScrollbar>
+        <VRow>
+          <VCol v-for="item in codes" :key="item.id" cols="12" sm="6" md="4">
             <div class="flex-col-center">
               <h3>{{ item.title }}</h3>
               <svg :id="item.id" class="h-130px" />
             </div>
-          </NGi>
-        </NGrid>
-      </NScrollbar>
-    </NCard>
+          </VCol>
+        </VRow>
+      </SimpleScrollbar>
+    </VCard>
   </div>
 </template>
 

@@ -4,11 +4,8 @@ import { computed, ref } from 'vue';
 defineOptions({ name: 'CustomIconSelect' });
 
 interface Props {
-  /** Selected icon */
   value: string;
-  /** List of icons */
   icons: string[];
-  /** Icon for when nothing is selected */
   emptyIcon?: string;
 }
 
@@ -35,44 +32,49 @@ const selectedIcon = computed(() => modelValue.value || props.emptyIcon);
 
 const searchValue = ref('');
 
+const menuVisible = ref(false);
+
 const iconsList = computed(() => props.icons.filter(v => v.includes(searchValue.value)));
 
 function handleChange(iconItem: string) {
   modelValue.value = iconItem;
+  menuVisible.value = false;
 }
 </script>
 
 <template>
-  <NPopover placement="bottom-end" trigger="click">
-    <template #trigger>
-      <NInput v-model:value="modelValue" readonly placeholder="点击选择图标">
-        <template #suffix>
+  <VMenu v-model="menuVisible" :close-on-content-click="false" location="bottom end">
+    <template #activator="{ props: menuProps }">
+      <VTextField
+        v-bind="menuProps"
+        v-model="modelValue"
+        readonly
+        placeholder="点击选择图标"
+        variant="outlined"
+        density="comfortable"
+        hide-details
+      >
+        <template #append-inner>
           <SvgIcon :icon="selectedIcon" class="p-5px text-30px" />
         </template>
-      </NInput>
+      </VTextField>
     </template>
-    <template #header>
-      <NInput v-model:value="searchValue" placeholder="搜索图标"></NInput>
-    </template>
-    <div v-if="iconsList.length > 0" class="grid grid-cols-9 h-auto overflow-auto">
-      <span v-for="iconItem in iconsList" :key="iconItem" @click="handleChange(iconItem)">
-        <SvgIcon
-          :icon="iconItem"
-          class="m-2px cursor-pointer border-1px border-#d9d9d9 p-5px text-30px"
-          :class="{ 'border-primary': modelValue === iconItem }"
-        />
-      </span>
-    </div>
-    <NEmpty v-else class="w-306px" description="你什么也找不到" />
-  </NPopover>
+    <VCard min-width="306">
+      <VCardText>
+        <VTextField v-model="searchValue" placeholder="搜索图标" variant="outlined" density="compact" hide-details />
+      </VCardText>
+      <VCardText class="max-h-300px overflow-auto">
+        <div v-if="iconsList.length > 0" class="grid grid-cols-9">
+          <span v-for="iconItem in iconsList" :key="iconItem" @click="handleChange(iconItem)">
+            <SvgIcon
+              :icon="iconItem"
+              class="m-2px cursor-pointer border-1px border-#d9d9d9 p-5px text-30px"
+              :class="{ 'border-primary': modelValue === iconItem }"
+            />
+          </span>
+        </div>
+        <div v-else class="py-4 text-center text-gray-400">你什么也找不到</div>
+      </VCardText>
+    </VCard>
+  </VMenu>
 </template>
-
-<style lang="scss" scoped>
-:deep(.n-input-wrapper) {
-  padding-right: 0;
-}
-
-:deep(.n-input__suffix) {
-  border: 1px solid #d9d9d9;
-}
-</style>

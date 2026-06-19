@@ -28,14 +28,15 @@ onMounted(() => {
 
 <template>
   <div>
-    <NCard title="打字机 插件" :bordered="false" class="h-full card-wrapper">
-      <NSpace :vertical="true">
+    <VCard :flat="true" title="打字机 插件" class="h-full card-wrapper">
+      <div class="flex flex-col gap-16px">
         <GithubLink link="https://github.com/alexmacarthur/typeit" />
         <WebSiteLink label="文档地址：" link="https://www.typeitjs.com/docs/vanilla/usage/" />
-      </NSpace>
-      <NDivider title-placement="left">基本示例</NDivider>
+      </div>
+      <VDivider class="my-16px" />
+      <div class="text-16px font-medium">基本示例</div>
       <span ref="textRef" class="text-18px"></span>
-    </NCard>
+    </VCard>
   </div>
 </template>
 

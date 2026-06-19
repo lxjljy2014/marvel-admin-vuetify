@@ -35,29 +35,29 @@ async function handleRepeatedModalError() {
 </script>
 
 <template>
-  <NSpace vertical :size="16">
-    <NCard :title="$t('request.logout')" :bordered="false" size="small" segmented class="card-wrapper">
-      <NButton @click="logout">{{ $t('common.trigger') }}</NButton>
-    </NCard>
-    <NCard :title="$t('request.logoutWithModal')" :bordered="false" size="small" segmented class="card-wrapper">
-      <NButton @click="logoutWithModal">{{ $t('common.trigger') }}</NButton>
-    </NCard>
-    <NCard :title="$t('request.refreshToken')" :bordered="false" size="small" segmented class="card-wrapper">
-      <NButton @click="refreshToken">{{ $t('common.trigger') }}</NButton>
-    </NCard>
-    <NCard
-      :title="$t('page.function.request.repeatedErrorOccurOnce')"
-      :bordered="false"
-      size="small"
-      segmented
-      class="card-wrapper"
-    >
-      <NButton @click="handleRepeatedMessageError">{{ $t('page.function.request.repeatedError') }}(Message)</NButton>
-      <NButton class="ml-12px" @click="handleRepeatedModalError">
-        {{ $t('page.function.request.repeatedError') }}(Modal)
-      </NButton>
-    </NCard>
-  </NSpace>
+  <div class="flex flex-col gap-16px">
+    <VCard :title="$t('request.logout')" :flat="true" class="card-wrapper">
+      <VCardText>
+        <VBtn @click="logout">{{ $t('common.trigger') }}</VBtn>
+      </VCardText>
+    </VCard>
+    <VCard :title="$t('request.logoutWithModal')" :flat="true" class="card-wrapper">
+      <VCardText>
+        <VBtn @click="logoutWithModal">{{ $t('common.trigger') }}</VBtn>
+      </VCardText>
+    </VCard>
+    <VCard :title="$t('request.refreshToken')" :flat="true" class="card-wrapper">
+      <VCardText>
+        <VBtn @click="refreshToken">{{ $t('common.trigger') }}</VBtn>
+      </VCardText>
+    </VCard>
+    <VCard :title="$t('page.function.request.repeatedErrorOccurOnce')" :flat="true" class="card-wrapper">
+      <VCardText>
+        <VBtn @click="handleRepeatedMessageError">{{ $t('page.function.request.repeatedError') }}(Message)</VBtn>
+        <VBtn class="ml-12px" @click="handleRepeatedModalError">
+          {{ $t('page.function.request.repeatedError') }}(Modal)
+        </VBtn>
+      </VCardText>
+    </VCard>
+  </div>
 </template>
-
-<style scoped></style>

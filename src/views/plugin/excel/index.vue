@@ -1,16 +1,12 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import { reactive } from 'vue';
-import { NButton, NTag } from 'naive-ui';
 import { utils, writeFile } from 'xlsx';
 import { enableStatusRecord, userGenderRecord } from '@/constants/business';
 import { fetchGetUserList } from '@/service/api';
-import { useAppStore } from '../../../stores/modules/app';
-import { isTableColumnHasKey, useNaiveTable } from '@/hooks/common/table';
+import { useVuetifyPaginatedTable, defaultTransform, type VuetifyTableHeader } from '@/hooks/common/table';
 import { $t } from '@/locales';
 
-const appStore = useAppStore();
-
-const searchParams: Api.SystemManage.UserSearchParams = reactive({
+const searchParams = reactive<Api.SystemManage.UserSearchParams>({
   current: 1,
   size: 999,
   status: null,
@@ -21,103 +17,30 @@ const searchParams: Api.SystemManage.UserSearchParams = reactive({
   userEmail: null
 });
 
-const { columns, data, loading } = useNaiveTable({
+const { headers, data, loading, serverItems, itemsLength, serverPagination, onLoad } = useVuetifyPaginatedTable({
   api: () => fetchGetUserList(searchParams),
-  transform: response => {
-    const { data: list, error } = response;
-
-    if (!error) {
-      return list.records;
-    }
-
-    return [];
+  transform: response => defaultTransform(response),
+  onPaginationParamsChange: params => {
+    searchParams.current = params.page;
+    searchParams.size = params.pageSize;
   },
   columns: () => [
-    {
-      type: 'selection',
-      align: 'center',
-      width: 48
-    },
-    {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 64,
-      render: (_, index) => index + 1
-    },
-    {
-      key: 'userName',
-      title: $t('page.manage.user.userName'),
-      align: 'center',
-      minWidth: 100
-    },
-    {
-      key: 'userGender',
-      title: $t('page.manage.user.userGender'),
-      align: 'center',
-      width: 100,
-      render: row => {
-        if (row.userGender === null) {
-          return null;
-        }
-
-        const tagMap: Record<Api.SystemManage.UserGender, NaiveUI.ThemeColor> = {
-          1: 'primary',
-          2: 'error'
-        };
-
-        const label = $t(userGenderRecord[row.userGender]);
-
-        return <NTag type={tagMap[row.userGender]}>{label}</NTag>;
-      }
-    },
-    {
-      key: 'nickName',
-      title: $t('page.manage.user.nickName'),
-      align: 'center',
-      minWidth: 100
-    },
-    {
-      key: 'userPhone',
-      title: $t('page.manage.user.userPhone'),
-      align: 'center',
-      width: 120
-    },
-    {
-      key: 'userEmail',
-      title: $t('page.manage.user.userEmail'),
-      align: 'center',
-      minWidth: 200
-    },
-    {
-      key: 'status',
-      title: $t('page.manage.user.userStatus'),
-      align: 'center',
-      width: 100,
-      render: row => {
-        if (row.status === null) {
-          return null;
-        }
-
-        const tagMap: Record<Api.Common.EnableStatus, NaiveUI.ThemeColor> = {
-          1: 'success',
-          2: 'warning'
-        };
-
-        const label = $t(enableStatusRecord[row.status]);
-
-        return <NTag type={tagMap[row.status]}>{label}</NTag>;
-      }
-    }
+    { key: 'index', title: $t('common.index'), align: 'center', width: 80, sortable: false },
+    { key: 'userName', title: $t('page.manage.user.userName'), align: 'center', minWidth: 100, sortable: false },
+    { key: 'userGender', title: $t('page.manage.user.userGender'), align: 'center', width: 100, sortable: false },
+    { key: 'nickName', title: $t('page.manage.user.nickName'), align: 'center', minWidth: 100, sortable: false },
+    { key: 'userPhone', title: $t('page.manage.user.userPhone'), align: 'center', width: 120, sortable: false },
+    { key: 'userEmail', title: $t('page.manage.user.userEmail'), align: 'center', minWidth: 200, sortable: false },
+    { key: 'status', title: $t('page.manage.user.userStatus'), align: 'center', width: 100, sortable: false }
   ]
 });
 
 function exportExcel() {
-  const exportColumns = columns.value.slice(2);
+  const exportHeaders = headers.value.slice(1);
 
-  const excelList = data.value.map(item => exportColumns.map(col => getTableValue(col, item)));
+  const excelList = data.value.map(item => exportHeaders.map(h => getTableValue(h, item)));
 
-  const titleList = exportColumns.map(col => (isTableColumnHasTitle(col) && col.title) || null);
+  const titleList = exportHeaders.map(h => h.title || null);
 
   excelList.unshift(titleList);
 
@@ -125,8 +48,8 @@ function exportExcel() {
 
   const workSheet = utils.aoa_to_sheet(excelList);
 
-  workSheet['!cols'] = exportColumns.map(item => ({
-    width: Math.round(Number(item.width) / 10 || 20)
+  workSheet['!cols'] = exportHeaders.map(h => ({
+    width: Math.round((h.width || h.minWidth || 120) / 10 || 20)
   }));
 
   utils.book_append_sheet(workBook, workSheet, '用户列表');
@@ -134,16 +57,8 @@ function exportExcel() {
   writeFile(workBook, '用户数据.xlsx');
 }
 
-function getTableValue(col: NaiveUI.TableColumn<Api.SystemManage.User>, item: Api.SystemManage.User) {
-  if (!isTableColumnHasKey(col)) {
-    return null;
-  }
-
-  const { key } = col;
-
-  if (key === 'userRoles') {
-    return item.userRoles.map(role => role).join(',');
-  }
+function getTableValue(header: VuetifyTableHeader, item: Api.SystemManage.User) {
+  const { key } = header;
 
   if (key === 'status') {
     return (item.status && $t(enableStatusRecord[item.status])) || null;
@@ -153,45 +68,71 @@ function getTableValue(col: NaiveUI.TableColumn<Api.SystemManage.User>, item: Ap
     return (item.userGender && $t(userGenderRecord[item.userGender])) || null;
   }
 
-  // @ts-expect-error the key is not in the type of Api.SystemManage.User
+  // @ts-expect-error the key may not exist in the type
   return item[key] || null;
-}
-
-function isTableColumnHasTitle<T>(column: NaiveUI.TableColumn<T>): column is NaiveUI.TableColumnWithKey<T> & {
-  title: string;
-} {
-  return Boolean((column as NaiveUI.TableColumnWithKey<T>).title);
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <NCard title="Excel导出" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
-      <template #header-extra>
-        <NSpace align="end" wrap justify="end" class="lt-sm:w-200px">
-          <NButton size="small" ghost type="primary" @click="exportExcel">
-            <template #icon>
+    <VCard :flat="true" class="card-wrapper sm:flex-1-hidden" title="Excel导出">
+      <template #append>
+        <div class="flex justify-end lt-sm:w-200px">
+          <VBtn size="small" variant="outlined" color="primary" @click="exportExcel">
+            <template #prepend>
               <icon-file-icons-microsoft-excel class="text-icon" />
             </template>
             导出excel
-          </NButton>
-        </NSpace>
+          </VBtn>
+        </div>
       </template>
 
-      <NDataTable
-        :columns="columns"
-        :data="data"
-        size="small"
-        :flex-height="!appStore.isMobile"
-        :scroll-x="962"
-        :loading="loading"
-        remote
-        :row-key="row => row.id"
-        :pagination="false"
-        :virtual-scroll="true"
-        class="sm:h-full"
-      />
-    </NCard>
+      <VCardText class="flex-grow flex-col">
+        <VSheet border class="flex-grow flex-col">
+          <VDataTableServer
+            :headers="headers"
+            :items="serverItems"
+            :items-length="itemsLength"
+            :loading="loading ? 'primary' : false"
+            :page="serverPagination.page"
+            :items-per-page="serverPagination.itemsPerPage"
+            :items-per-page-options="[10, 15, 20, 25, 30]"
+            fixed-header
+            item-value="id"
+            gridlines="all"
+            density="comfortable"
+            class="flex-grow [&_.v-table__wrapper]:flex-basis-0!"
+            @update:options="onLoad"
+          >
+            <template #item.index="{ index }">
+              {{ index + 1 }}
+            </template>
+
+            <template #item.userGender="{ item }">
+              <VChip
+                v-if="item.userGender !== null"
+                :color="item.userGender === '1' ? 'primary' : 'error'"
+                size="small"
+                label
+              >
+                {{ $t(userGenderRecord[item.userGender]) }}
+              </VChip>
+            </template>
+
+            <template #item.status="{ item }">
+              <VChip
+                v-if="item.status !== null"
+                :color="item.status === '1' ? 'success' : 'warning'"
+                size="small"
+                label
+              >
+                {{ $t(enableStatusRecord[item.status]) }}
+              </VChip>
+            </template>
+          </VDataTableServer>
+        </VSheet>
+      </VCardText>
+    </VCard>
   </div>
 </template>
 

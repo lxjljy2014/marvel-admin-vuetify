@@ -26,13 +26,13 @@ function printImage() {
 
 <template>
   <div class="h-full">
-    <NCard title="打印" :bordered="false" class="card-wrapper">
-      <NButton type="primary" class="mr-10px" @click="printTable">打印表格</NButton>
-      <NButton type="primary" @click="printImage">打印图片</NButton>
-      <template #footer>
+    <VCard :flat="true" title="打印" class="card-wrapper">
+      <VBtn color="primary" class="mr-10px" @click="printTable">打印表格</VBtn>
+      <VBtn color="primary" @click="printImage">打印图片</VBtn>
+      <template #actions>
         <GithubLink label="printJS：" link="https://github.com/crabbly/Print.js" class="mt-10px" />
       </template>
-    </NCard>
+    </VCard>
   </div>
 </template>
 
