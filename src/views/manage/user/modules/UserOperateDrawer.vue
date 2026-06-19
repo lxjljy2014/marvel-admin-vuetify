@@ -122,82 +122,92 @@ watch(visible, () => {
 
 <template>
   <VNavigationDrawer v-model="visible" location="right" temporary :width="drawerWidth" :mobile-breakpoint="0">
-    <div class="flex items-center p-4">
-      <span class="text-xl font-medium">{{ title }}</span>
-      <VSpacer />
-      <VBtn icon variant="text" @click="closeDrawer">
-        <VIcon>mdi-close</VIcon>
-      </VBtn>
-    </div>
+    <template #prepend>
+      <div class="flex items-center">
+        <span class="text-xl font-medium">{{ title }}</span>
+        <VSpacer />
+        <VBtn icon variant="text" @click="closeDrawer">
+          <VIcon>mdi-close</VIcon>
+        </VBtn>
+      </div>
+      <VDivider></VDivider>
+    </template>
 
-    <VDivider />
+    <VCard>
+      <VCardText>
+        <VForm ref="formRef" v-model="valid" class="p-4 pt-0">
+          <VTextField
+            v-model="model.userName"
+            :label="$t('page.manage.user.userName')"
+            :placeholder="$t('page.manage.user.form.userName')"
+            :rules="rules.userName"
+            variant="outlined"
+            density="comfortable"
+            class="mb-2"
+          />
 
-    <VForm ref="formRef" v-model="valid" class="p-4 pt-0">
-      <VTextField
-        v-model="model.userName"
-        :label="$t('page.manage.user.userName')"
-        :placeholder="$t('page.manage.user.form.userName')"
-        :rules="rules.userName"
-        variant="outlined"
-        density="comfortable"
-        class="mb-2"
-      />
+          <VRadioGroup
+            v-model="model.userGender"
+            :label="$t('page.manage.user.userGender')"
+            density="compact"
+            class="mb-2"
+          >
+            <VRadio v-for="item in userGenderOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
+          </VRadioGroup>
 
-      <VRadioGroup v-model="model.userGender" :label="$t('page.manage.user.userGender')" density="compact" class="mb-2">
-        <VRadio v-for="item in userGenderOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
-      </VRadioGroup>
+          <VTextField
+            v-model="model.nickName"
+            :label="$t('page.manage.user.nickName')"
+            :placeholder="$t('page.manage.user.form.nickName')"
+            variant="outlined"
+            density="comfortable"
+            class="mb-2"
+          />
 
-      <VTextField
-        v-model="model.nickName"
-        :label="$t('page.manage.user.nickName')"
-        :placeholder="$t('page.manage.user.form.nickName')"
-        variant="outlined"
-        density="comfortable"
-        class="mb-2"
-      />
+          <VTextField
+            v-model="model.userPhone"
+            :label="$t('page.manage.user.userPhone')"
+            :placeholder="$t('page.manage.user.form.userPhone')"
+            variant="outlined"
+            density="comfortable"
+            class="mb-2"
+          />
 
-      <VTextField
-        v-model="model.userPhone"
-        :label="$t('page.manage.user.userPhone')"
-        :placeholder="$t('page.manage.user.form.userPhone')"
-        variant="outlined"
-        density="comfortable"
-        class="mb-2"
-      />
+          <VTextField
+            v-model="model.userEmail"
+            :label="$t('page.manage.user.userEmail')"
+            :placeholder="$t('page.manage.user.form.userEmail')"
+            variant="outlined"
+            density="comfortable"
+            class="mb-2"
+          />
 
-      <VTextField
-        v-model="model.userEmail"
-        :label="$t('page.manage.user.userEmail')"
-        :placeholder="$t('page.manage.user.form.userEmail')"
-        variant="outlined"
-        density="comfortable"
-        class="mb-2"
-      />
+          <VRadioGroup
+            v-model="model.status"
+            :label="$t('page.manage.user.userStatus')"
+            :rules="rules.status"
+            density="compact"
+            class="mb-2"
+          >
+            <VRadio v-for="item in enableStatusOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
+          </VRadioGroup>
 
-      <VRadioGroup
-        v-model="model.status"
-        :label="$t('page.manage.user.userStatus')"
-        :rules="rules.status"
-        density="compact"
-        class="mb-2"
-      >
-        <VRadio v-for="item in enableStatusOptions" :key="item.value" :value="item.value" :label="$t(item.label)" />
-      </VRadioGroup>
-
-      <VSelect
-        v-model="model.userRoles"
-        :label="$t('page.manage.user.userRole')"
-        :placeholder="$t('page.manage.user.form.userRole')"
-        :items="roleOptions"
-        item-title="label"
-        item-value="value"
-        multiple
-        chips
-        variant="outlined"
-        density="comfortable"
-        class="mb-2"
-      />
-    </VForm>
+          <VSelect
+            v-model="model.userRoles"
+            :label="$t('page.manage.user.userRole')"
+            :placeholder="$t('page.manage.user.form.userRole')"
+            :items="roleOptions"
+            item-title="label"
+            item-value="value"
+            multiple
+            chips
+            variant="outlined"
+            density="comfortable"
+            class="mb-2"
+          />
+        </VForm>
+      </VCardText>
+    </VCard>
 
     <template #append>
       <VDivider />

@@ -35,7 +35,7 @@ function resetScroll() {
 
 <template>
   <VMain scrollable>
-    <VContainer fluid class="flex-col flex-grow" :class="{ 'p-16px': showPadding }">
+    <VContainer fluid class="flex-col flex-grow" :class="showPadding ? 'pa-4' : 'pa-0'">
       <RouterView v-slot="{ Component, route }">
         <Transition
           :name="transitionName"

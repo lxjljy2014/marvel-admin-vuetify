@@ -186,8 +186,4 @@ function edit(id: number) {
   </div>
 </template>
 
-<style lang="scss" scoped>
-// :deep(.v-table .v-table__wrapper) {
-//   flex: 1 1 0;
-// }
-</style>
+<style lang="scss" scoped></style>
