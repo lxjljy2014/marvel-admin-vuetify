@@ -79,7 +79,7 @@ function getTableValue(header: VuetifyTableHeader, item: Api.SystemManage.User) 
         <div class="flex justify-end lt-sm:w-200px">
           <VBtn size="small" variant="outlined" color="primary" @click="exportExcel">
             <template #prepend>
-              <icon-file-icons-microsoft-excel class="text-icon" />
+              <VIcon icon="mdi-file-excel" class="text-icon" />
             </template>
             导出excel
           </VBtn>

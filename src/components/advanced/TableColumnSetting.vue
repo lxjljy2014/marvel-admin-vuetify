@@ -103,7 +103,7 @@ const selectAllModel = computed({
           :class="{ hidden: !item.visible }"
         >
           <div class="h-full flex-y-center flex-1 rd-4px hover:(bg-primary bg-opacity-20)">
-            <icon-mdi-drag class="mr-8px h-full cursor-move text-icon" />
+            <VIcon icon="mdi-drag" class="mr-8px h-full cursor-move text-icon" />
             <VCheckbox v-model="item.checked" density="compact" hide-details class="none_draggable flex-1">
               <template #label>
                 <template v-if="typeof item.title === 'function'">
@@ -119,9 +119,9 @@ const selectAllModel = computed({
             :tooltip-content="$t(tooltipRecord[item.fixed!])"
             @click="handleFixed(item)"
           >
-            <icon-octicon-pin-16 v-if="item.fixed === 'unFixed'" />
-            <icon-octicon-pin-16 v-else-if="item.fixed === 'left'" class="rotate-270" />
-            <icon-octicon-pin-slash-16 v-else />
+            <VIcon v-if="item.fixed === 'unFixed'" icon="mdi-pin" />
+            <VIcon v-else-if="item.fixed === 'left'" icon="mdi-pin" class="rotate-270" />
+            <VIcon v-else icon="mdi-pin-off" />
           </ButtonIcon>
         </div>
       </VueDraggable>

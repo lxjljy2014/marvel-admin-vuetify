@@ -1,8 +1,21 @@
+import fs from 'node:fs';
 import process from 'node:process';
 import path from 'node:path';
 import { presetIcons } from 'unocss';
 import unocss from 'unocss/vite';
-import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders';
+
+function createSvgIconLoader(dir: string) {
+  return async (iconName: string): Promise<string | undefined> => {
+    const svgPath = path.join(dir, `${iconName}.svg`);
+    try {
+      let svg = await fs.promises.readFile(svgPath, 'utf-8');
+      svg = svg.replace(/^<svg\s/, '<svg width="1em" height="1em" ');
+      return svg;
+    } catch {
+      return undefined;
+    }
+  };
+}
 
 export function setupUnocss(viteEnv: Env.ImportMeta) {
   const { VITE_ICON_PREFIX, VITE_ICON_LOCAL_PREFIX } = viteEnv;
@@ -21,9 +34,7 @@ export function setupUnocss(viteEnv: Env.ImportMeta) {
           display: 'inline-block'
         },
         collections: {
-          [collectionName]: FileSystemIconLoader(localIconPath, svg =>
-            svg.replace(/^<svg\s/, '<svg width="1em" height="1em" ')
-          )
+          [collectionName]: createSvgIconLoader(localIconPath)
         },
         warn: true
       })

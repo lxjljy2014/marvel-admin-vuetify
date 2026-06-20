@@ -46,7 +46,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'about',
       i18nKey: 'route.about',
-      icon: 'fluent:book-information-24-regular',
+      icon: 'mdi-book-information',
       order: 10
     }
   },
@@ -57,7 +57,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'alova',
       i18nKey: 'route.alova',
-      icon: 'carbon:http',
+      icon: 'mdi-http',
       order: 7
     },
     children: [
@@ -78,7 +78,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'alova_scenes',
           i18nKey: 'route.alova_scenes',
-          icon: 'cbi:scene-dynamic',
+          icon: 'mdi-script-text',
           order: 3
         }
       }
@@ -91,7 +91,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'function',
       i18nKey: 'route.function',
-      icon: 'icon-park-outline:all-application',
+      icon: 'mdi-apps',
       order: 6
     },
     children: [
@@ -101,7 +101,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'function_hide-child',
           i18nKey: 'route.function_hide-child',
-          icon: 'material-symbols:filter-list-off',
+          icon: 'mdi-filter-off',
           order: 2
         },
         redirect: '/function/hide-child/one',
@@ -113,7 +113,7 @@ export const generatedRoutes: GeneratedRoute[] = [
             meta: {
               title: 'function_hide-child_one',
               i18nKey: 'route.function_hide-child_one',
-              icon: 'material-symbols:filter-list-off',
+              icon: 'mdi-filter-off',
               hideInMenu: true,
               activeMenu: 'function_hide-child'
             }
@@ -149,7 +149,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'function_multi-tab',
           i18nKey: 'route.function_multi-tab',
-          icon: 'ic:round-tab',
+          icon: 'mdi-tab',
           multiTab: true,
           hideInMenu: true,
           activeMenu: 'function_tab'
@@ -162,7 +162,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'function_request',
           i18nKey: 'route.function_request',
-          icon: 'carbon:network-overlay',
+          icon: 'mdi-network-outline',
           order: 3
         }
       },
@@ -173,7 +173,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'function_super-page',
           i18nKey: 'route.function_super-page',
-          icon: 'ic:round-supervisor-account',
+          icon: 'mdi-shield-account',
           order: 5,
           roles: ['R_SUPER']
         }
@@ -185,7 +185,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'function_tab',
           i18nKey: 'route.function_tab',
-          icon: 'ic:round-tab',
+          icon: 'mdi-tab',
           order: 1
         }
       },
@@ -196,7 +196,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'function_toggle-auth',
           i18nKey: 'route.function_toggle-auth',
-          icon: 'ic:round-construction',
+          icon: 'mdi-wrench',
           order: 4
         }
       }
@@ -245,7 +245,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'manage',
       i18nKey: 'route.manage',
-      icon: 'carbon:cloud-service-management',
+      icon: 'mdi-cloud-cog',
       order: 9,
       roles: ['R_ADMIN']
     },
@@ -257,7 +257,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'manage_menu',
           i18nKey: 'route.manage_menu',
-          icon: 'material-symbols:route',
+          icon: 'mdi-routes',
           order: 3,
           roles: ['R_ADMIN'],
           keepAlive: true
@@ -270,7 +270,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'manage_role',
           i18nKey: 'route.manage_role',
-          icon: 'carbon:user-role',
+          icon: 'mdi-shield-account',
           order: 2,
           roles: ['R_SUPER']
         }
@@ -282,7 +282,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'manage_user',
           i18nKey: 'route.manage_user',
-          icon: 'ic:round-manage-accounts',
+          icon: 'mdi-account',
           order: 1,
           roles: ['R_ADMIN']
         }
@@ -372,7 +372,7 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: '插件示例',
       i18nKey: 'route.plugin',
       order: 7,
-      icon: 'clarity:plugin-line'
+      icon: 'mdi-puzzle'
     },
     children: [
       {
@@ -382,7 +382,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'plugin_barcode',
           i18nKey: 'route.plugin_barcode',
-          icon: 'ic:round-barcode'
+          icon: 'mdi-barcode'
         }
       },
       {
@@ -401,7 +401,7 @@ export const generatedRoutes: GeneratedRoute[] = [
             meta: {
               title: 'plugin_charts_antv',
               i18nKey: 'route.plugin_charts_antv',
-              icon: 'hugeicons:flow-square'
+              icon: 'mdi-source-branch'
             }
           },
           {
@@ -411,7 +411,7 @@ export const generatedRoutes: GeneratedRoute[] = [
             meta: {
               title: 'plugin_charts_echarts',
               i18nKey: 'route.plugin_charts_echarts',
-              icon: 'simple-icons:apacheecharts'
+              icon: 'mdi-chart-line'
             }
           },
           {
@@ -442,7 +442,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'plugin_editor',
           i18nKey: 'route.plugin_editor',
-          icon: 'icon-park-outline:editor'
+          icon: 'mdi-file-document-edit'
         },
         children: [
           {
@@ -452,7 +452,7 @@ export const generatedRoutes: GeneratedRoute[] = [
             meta: {
               title: 'plugin_editor_markdown',
               i18nKey: 'route.plugin_editor_markdown',
-              icon: 'ri:markdown-line'
+              icon: 'mdi-language-markdown'
             }
           },
           {
@@ -474,7 +474,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'plugin_excel',
           i18nKey: 'route.plugin_excel',
-          icon: 'ri:file-excel-2-line',
+          icon: 'mdi-file-excel',
           keepAlive: true
         }
       },
@@ -484,7 +484,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'plugin_gantt',
           i18nKey: 'route.plugin_gantt',
-          icon: 'ant-design:bar-chart-outlined'
+          icon: 'mdi-chart-gantt'
         },
         children: [
           {
@@ -535,7 +535,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'plugin_pdf',
           i18nKey: 'route.plugin_pdf',
-          icon: 'uiw:file-pdf'
+          icon: 'mdi-file-pdf-box'
         }
       },
       {
@@ -545,7 +545,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'plugin_pinyin',
           i18nKey: 'route.plugin_pinyin',
-          icon: 'entypo-social:google-hangouts'
+          icon: 'mdi-alphabet-chinese'
         }
       },
       {
@@ -565,7 +565,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'plugin_swiper',
           i18nKey: 'route.plugin_swiper',
-          icon: 'simple-icons:swiper'
+          icon: 'mdi-view-carousel'
         }
       },
       {
@@ -574,7 +574,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'plugin_tables',
           i18nKey: 'route.plugin_tables',
-          icon: 'icon-park-outline:table'
+          icon: 'mdi-table'
         },
         children: [
           {

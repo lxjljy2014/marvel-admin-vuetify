@@ -32,10 +32,10 @@ const localIcons = ['custom-icon', 'activity', 'at-sign', 'cast', 'chrome', 'cop
       </div>
       <div class="grid grid-cols-10">
         <div class="mt-5px flex-x-center">
-          <icon-local-activity class="text-40px text-success" />
+          <SvgIcon local-icon="activity" class="text-40px text-success" />
         </div>
         <div class="mt-5px flex-x-center">
-          <icon-local-cast class="text-20px text-error" />
+          <SvgIcon local-icon="cast" class="text-20px text-error" />
         </div>
       </div>
       <div class="py-12px text-16px">通过SvgIcon组件动态渲染, 菜单通过meta的localIcon属性渲染自定义图标</div>

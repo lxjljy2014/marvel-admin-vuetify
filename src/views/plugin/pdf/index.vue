@@ -56,13 +56,13 @@ async function handleDownload() {
             @update:model-value="showAllPagesChange"
           />
           <ButtonIcon tooltip-content="旋转90度" @click="handleRotate">
-            <icon-material-symbols-light-rotate-90-degrees-ccw-outline-rounded />
+            <VIcon icon="mdi-format-rotate-90" />
           </ButtonIcon>
           <ButtonIcon tooltip-content="打印" @click="handlePrint">
-            <icon-mdi-printer />
+            <VIcon icon="mdi-printer" />
           </ButtonIcon>
           <ButtonIcon tooltip-content="下载" @click="handleDownload">
-            <icon-charm-download />
+            <VIcon icon="mdi-download" />
           </ButtonIcon>
         </div>
         <SimpleScrollbar class="flex-1-hidden">

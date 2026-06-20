@@ -31,8 +31,8 @@ const toggleStop = () => {
       {{ $t('page.alova.scenes.visibilityRequestTips') }}
     </VAlert>
     <VBtn color="primary" @click="toggleStop">
-      <icon-carbon-play v-if="isStop" class="mr-2" />
-      <icon-carbon-stop v-else class="mr-2" />
+      <VIcon v-if="isStop" icon="mdi-play" class="mr-2" />
+      <VIcon v-else icon="mdi-stop" class="mr-2" />
       {{ isStop ? $t('page.alova.scenes.startRequest') : $t('page.alova.scenes.stopRequest') }}
     </VBtn>
     <div class="flex items-center gap-8px">

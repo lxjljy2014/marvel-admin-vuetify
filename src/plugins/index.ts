@@ -4,7 +4,6 @@ import { getLocale, setupI18n } from '@/locales';
 import type { App } from 'vue';
 import { setupLoading } from './loading';
 import { setupNProgress } from './nprogress';
-import { setupIconifyOffline } from './iconify';
 import { setupDayjs } from './dayjs';
 import { setupAppVersionNotification } from './app';
 import { setupVueRootValidator } from 'vite-plugin-vue-transition-root-validator/client';
@@ -14,8 +13,6 @@ export async function registerPlugins(app: App) {
   setupLoading();
 
   setupNProgress();
-
-  setupIconifyOffline();
 
   setupDayjs();
 

@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { computed, useAttrs } from 'vue';
-import { Icon } from '@iconify/vue';
 
 defineOptions({ name: 'SvgIcon', inheritAttrs: false });
 
 /**
  * Props
  *
- * - Support iconify and local svg icon
+ * - Support mdi font icon and local svg icon
  * - If icon and localIcon are passed at the same time, localIcon will be rendered first
  */
 interface Props {
-  /** Iconify icon name */
+  /** MDI icon name (mdi-xxx or mdi:xxx format) */
   icon?: string;
   /** Local svg icon name */
   localIcon?: string;
@@ -36,6 +35,12 @@ const symbolId = computed(() => {
   return `#${prefix}-${icon}`;
 });
 
+/** Convert iconify format (mdi:xxx) to mdi font format (mdi-xxx) */
+const mdiIcon = computed(() => {
+  if (!props.icon) return '';
+  return props.icon.replace(':', '-');
+});
+
 /** If localIcon is passed, render localIcon first */
 const renderLocalIcon = computed(() => props.localIcon || !props.icon);
 </script>
@@ -47,7 +52,7 @@ const renderLocalIcon = computed(() => props.localIcon || !props.icon);
     </svg>
   </template>
   <template v-else>
-    <Icon v-if="icon" :icon="icon" v-bind="bindAttrs" />
+    <VIcon v-if="mdiIcon" :icon="mdiIcon" v-bind="bindAttrs" />
   </template>
 </template>
 
