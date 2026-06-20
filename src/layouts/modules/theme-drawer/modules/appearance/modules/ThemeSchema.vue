@@ -14,7 +14,7 @@ const themeStore = useThemeStore();
 const theme = useTheme();
 
 const icons: Record<UnionKey.ThemeScheme, string> = {
-  light: 'mdi-weather-sunny',
+  light: 'mdi-white-balance-sunny',
   dark: 'mdi-weather-night',
   auto: 'mdi-brightness-auto'
 };
