@@ -46,7 +46,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'about',
       i18nKey: 'route.about',
-      icon: 'mdi-book-information',
+      icon: 'mdi-information',
       order: 10
     }
   },
@@ -57,7 +57,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'alova',
       i18nKey: 'route.alova',
-      icon: 'mdi-http',
+      icon: 'mdi-web',
       order: 7
     },
     children: [
@@ -545,7 +545,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'plugin_pinyin',
           i18nKey: 'route.plugin_pinyin',
-          icon: 'mdi-alphabet-chinese'
+          icon: 'mdi-translate',
         }
       },
       {
