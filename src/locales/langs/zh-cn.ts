@@ -233,6 +233,8 @@ const local: App.I18n.Schema = {
     document_vue: 'Vue文档',
     document_vite: 'Vite文档',
     document_unocss: 'UnoCSS文档',
+    document_naive: 'Naive UI文档',
+    'document_pro-naive': 'Pro Naive UI文档',
     document_antd: 'Ant Design Vue文档',
     document_alova: 'Alova文档',
     'user-center': '个人中心',

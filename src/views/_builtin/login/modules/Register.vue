@@ -42,7 +42,6 @@ const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
 
 async function handleSubmit() {
   await validate();
-  console.log(valid.value);
   if (valid.value) {
     // request to register
     window.$message?.success($t('page.login.common.validateSuccess'));

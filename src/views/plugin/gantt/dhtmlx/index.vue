@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, shallowRef } from 'vue';
+import { onMounted, onUnmounted, shallowRef } from 'vue';
 import { gantt } from 'dhtmlx-gantt';
 import type { GanttConfigOptions, ZoomLevel } from 'dhtmlx-gantt';
 import 'dhtmlx-gantt/codebase/dhtmlxgantt.css';
@@ -173,6 +173,10 @@ function changeTime(value: TimeType) {
 
 onMounted(() => {
   initGantt();
+});
+
+onUnmounted(() => {
+  gantt.clearAll();
 });
 </script>
 

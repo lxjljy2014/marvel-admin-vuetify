@@ -53,7 +53,6 @@ function handleAdd() {
 }
 
 async function handleBatchDelete() {
-  console.log(checkedRowKeys.value);
   await onBatchDeleted();
 }
 
@@ -68,7 +67,6 @@ function handleDelete(id: number) {
 function confirmDelete() {
   deleteDialogVisible.value = false;
   if (deleteTargetId.value !== null) {
-    console.log(deleteTargetId.value);
     onDeleted();
     deleteTargetId.value = null;
   }

@@ -6,13 +6,7 @@ import { useFormRules, useVuetifyForm } from '@/hooks/common/form';
 import { getLocalIcons } from '@/utils/icon';
 import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/SvgIcon.vue';
-import {
-  getLayoutAndPage,
-  getPathParamFromRoutePath,
-  getRoutePathByRouteName,
-  getRoutePathWithParam,
-  transformLayoutAndPageToComponent
-} from './shared';
+import { getLayoutAndPage, getPathParamFromRoutePath, getRoutePathByRouteName } from './shared';
 
 defineOptions({
   name: 'MenuOperateModal'
@@ -243,25 +237,9 @@ function removeButtonItem(index: number) {
   model.value.buttons.splice(index, 1);
 }
 
-function getSubmitParams() {
-  const { layout, page, pathParam, ...params } = model.value;
-
-  const component = transformLayoutAndPageToComponent(layout, page);
-  const routePath = getRoutePathWithParam(model.value.routePath, pathParam);
-
-  params.component = component;
-  params.routePath = routePath;
-
-  return params;
-}
-
 async function handleSubmit() {
   await validate();
   if (valid.value) {
-    const params = getSubmitParams();
-
-    console.log('params: ', params);
-
     window.$message?.success($t('common.updateSuccess'));
     closeDrawer();
     emit('submitted');

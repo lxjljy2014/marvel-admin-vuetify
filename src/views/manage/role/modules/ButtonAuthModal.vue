@@ -10,7 +10,7 @@ interface Props {
   roleId: number;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const visible = defineModel<boolean>('visible', {
   default: false
@@ -48,13 +48,10 @@ async function getAllButtons() {
 const checks = shallowRef<number[]>([]);
 
 async function getChecks() {
-  console.log(props.roleId);
   checks.value = [1, 2, 3, 4, 5];
 }
 
 function handleSubmit() {
-  console.log(checks.value, props.roleId);
-
   window.$message?.success?.($t('common.modifySuccess'));
 
   closeModal();

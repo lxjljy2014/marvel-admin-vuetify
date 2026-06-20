@@ -61,7 +61,6 @@ function handleDelete(id: number) {
 function confirmDelete() {
   deleteDialogVisible.value = false;
   if (deleteTargetId.value !== null) {
-    console.log(deleteTargetId.value);
     onDeleted();
     deleteTargetId.value = null;
   }

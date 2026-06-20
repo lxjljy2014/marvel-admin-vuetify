@@ -33,6 +33,8 @@ export default defineConfig(configEnv => {
       port: 3100
     },
     build: {
+      target: 'es2020',
+      chunkSizeWarningLimit: 1000,
       reportCompressedSize: false,
       sourcemap: viteEnv.VITE_SOURCE_MAP === 'Y',
       commonjsOptions: {

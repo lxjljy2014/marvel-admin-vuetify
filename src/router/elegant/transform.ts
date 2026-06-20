@@ -174,6 +174,8 @@ const routeMap: RouteMap = {
   "document_vue": "/document/vue",
   "document_vite": "/document/vite",
   "document_unocss": "/document/unocss",
+  "document_naive": "/document/naive",
+  "document_pro-naive": "/document/pro-naive",
   "document_antd": "/document/antd",
   "document_alova": "/document/alova",
   "403": "/403",

@@ -38,9 +38,7 @@ function handleClose() {
 }
 
 /** key enter */
-function handleEnter(e: Event, value: string) {
-  console.log(e);
-  console.log(value);
+function handleEnter(_e: Event, _value: string) {
   if (resultOptions.value?.length === 0 || activePath.value === '') return;
   handleClose();
   router.push(activePath.value);

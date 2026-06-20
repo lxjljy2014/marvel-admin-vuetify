@@ -68,8 +68,7 @@ function getTableValue(header: VuetifyTableHeader, item: Api.SystemManage.User) 
     return (item.userGender && $t(userGenderRecord[item.userGender])) || null;
   }
 
-  // @ts-expect-error the key may not exist in the type
-  return item[key] || null;
+  return (item as Record<string, any>)[key] || null;
 }
 </script>
 

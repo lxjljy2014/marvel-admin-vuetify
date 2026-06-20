@@ -10,7 +10,6 @@ defineOptions({
 const themeStore = useThemeStore();
 
 function handleUpdateColor(color: string, key: App.Theme.ThemeColorKey) {
-  console.log(color, key);
   themeStore.updateThemeColors(key, color);
 }
 

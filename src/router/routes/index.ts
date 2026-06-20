@@ -78,6 +78,34 @@ const customRoutes: CustomRoute[] = [
         }
       },
       {
+        name: 'document_naive',
+        path: '/document/naive',
+        component: 'view.iframe-page',
+        props: {
+          url: 'https://www.naiveui.com/zh-CN/os-theme/docs/introduction'
+        },
+        meta: {
+          title: 'document_naive',
+          i18nKey: 'route.document_naive',
+          order: 6,
+          icon: 'logos:naiveui'
+        }
+      },
+      {
+        name: 'document_pro-naive',
+        path: '/document/pro-naive',
+        component: 'view.iframe-page',
+        props: {
+          url: 'https://naive-ui.pro-components.cn/'
+        },
+        meta: {
+          title: 'document_pro-naive',
+          i18nKey: 'route.document_pro-naive',
+          order: 6,
+          icon: 'logos:naiveui'
+        }
+      },
+      {
         name: 'document_alova',
         path: '/document/alova',
         component: 'view.iframe-page',
