@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import { onMounted, shallowRef } from 'vue';
 import { gantt } from 'dhtmlx-gantt';
 import type { GanttConfigOptions, ZoomLevel } from 'dhtmlx-gantt';

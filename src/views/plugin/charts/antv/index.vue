@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 import type { Ref } from 'vue';
 import type { CustomBehaviorOption, IPointerEvent } from '@antv/g6';

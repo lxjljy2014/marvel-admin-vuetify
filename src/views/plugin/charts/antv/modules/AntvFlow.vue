@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import { shallowRef, useTemplateRef, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { vResizeObserver } from '@vueuse/components';

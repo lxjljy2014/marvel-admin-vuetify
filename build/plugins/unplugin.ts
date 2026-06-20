@@ -29,11 +29,7 @@ export function setupUnplugin(viteEnv: Env.ImportMeta) {
     Components({
       dts: 'src/typings/components.d.ts',
       types: [{ from: 'vue-router', names: ['RouterLink', 'RouterView'] }],
-      resolvers: [
-        // NaiveUiResolver(),
-        // ProNaiveUIResolver(),
-        IconsResolver({ customCollections: [collectionName], componentPrefix: VITE_ICON_PREFIX })
-      ]
+      resolvers: [IconsResolver({ customCollections: [collectionName], componentPrefix: VITE_ICON_PREFIX })]
     }),
     createSvgIconsPlugin({
       iconDirs: [localIconPath],
