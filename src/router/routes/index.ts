@@ -16,7 +16,7 @@ const customRoutes: CustomRoute[] = [
     meta: {
       title: 'exception',
       i18nKey: 'route.exception',
-      icon: 'ant-design:exception-outlined',
+      icon: 'mdi-file-document-remove-outline',
       order: 7
     },
     children: [
@@ -27,7 +27,7 @@ const customRoutes: CustomRoute[] = [
         meta: {
           title: 'exception_403',
           i18nKey: 'route.exception_403',
-          icon: 'ic:baseline-block'
+          icon: 'mdi-cancel'
         }
       },
       {
@@ -37,7 +37,7 @@ const customRoutes: CustomRoute[] = [
         meta: {
           title: 'exception_404',
           i18nKey: 'route.exception_404',
-          icon: 'ic:baseline-web-asset-off'
+          icon: 'mdi-cast-off'
         }
       },
       {
@@ -47,7 +47,7 @@ const customRoutes: CustomRoute[] = [
         meta: {
           title: 'exception_500',
           i18nKey: 'route.exception_500',
-          icon: 'ic:baseline-wifi-off'
+          icon: 'mdi-wifi-off'
         }
       }
     ]
@@ -60,7 +60,7 @@ const customRoutes: CustomRoute[] = [
       title: 'document',
       i18nKey: 'route.document',
       order: 2,
-      icon: 'mdi:file-document-multiple-outline'
+      icon: 'mdi-file-document-multiple-outline'
     },
     children: [
       {
@@ -196,7 +196,7 @@ const customRoutes: CustomRoute[] = [
           title: 'document_vue',
           i18nKey: 'route.document_vue',
           order: 3,
-          icon: 'logos:vue'
+          icon: 'mdi-vuejs'
         }
       }
     ]

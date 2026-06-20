@@ -68,6 +68,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'alova_request',
           i18nKey: 'route.alova_request',
+          icon: 'mdi-script-text',
           order: 1
         }
       },
@@ -209,7 +210,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'home',
       i18nKey: 'route.home',
-      icon: 'mdi:monitor-dashboard',
+      icon: 'mdi-monitor-dashboard',
       order: 1
     }
   },
@@ -309,6 +310,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'multi-menu',
       i18nKey: 'route.multi-menu',
+      icon: 'mdi-menu',
       order: 8
     },
     children: [
@@ -318,6 +320,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'multi-menu_first',
           i18nKey: 'route.multi-menu_first',
+          icon: 'mdi-menu',
           order: 1
         },
         children: [
@@ -327,7 +330,8 @@ export const generatedRoutes: GeneratedRoute[] = [
             component: 'view.multi-menu_first_child',
             meta: {
               title: 'multi-menu_first_child',
-              i18nKey: 'route.multi-menu_first_child'
+              i18nKey: 'route.multi-menu_first_child',
+              icon: 'mdi-menu'
             }
           }
         ]
@@ -338,6 +342,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'multi-menu_second',
           i18nKey: 'route.multi-menu_second',
+          icon: 'mdi-menu',
           order: 2
         },
         children: [
@@ -346,7 +351,8 @@ export const generatedRoutes: GeneratedRoute[] = [
             path: '/multi-menu/second/child',
             meta: {
               title: 'multi-menu_second_child',
-              i18nKey: 'route.multi-menu_second_child'
+              i18nKey: 'route.multi-menu_second_child',
+              icon: 'mdi-menu'
             },
             children: [
               {
@@ -355,7 +361,8 @@ export const generatedRoutes: GeneratedRoute[] = [
                 component: 'view.multi-menu_second_child_home',
                 meta: {
                   title: 'multi-menu_second_child_home',
-                  i18nKey: 'route.multi-menu_second_child_home'
+                  i18nKey: 'route.multi-menu_second_child_home',
+                  icon: 'mdi-menu'
                 }
               }
             ]
@@ -545,7 +552,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'plugin_pinyin',
           i18nKey: 'route.plugin_pinyin',
-          icon: 'mdi-translate',
+          icon: 'mdi-translate'
         }
       },
       {
