@@ -223,7 +223,7 @@ declare namespace App {
       /** The route path */
       routePath: RoutePath;
       /** The menu icon */
-      icon?: () => VNode;
+      icon?: string;
       /** The menu children */
       children?: Menu[];
     };
