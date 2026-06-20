@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useAppStore } from '../../stores/modules/app';
+import { useAppStore } from '@/stores/modules/app';
 import { $t } from '@/locales';
 import pkg from '~/package.json';
 
@@ -72,7 +72,7 @@ const latestBuildTime = BUILD_TIME;
                 {{ $t('page.about.projectInfo.githubLink') }}
               </td>
               <td>
-                <a class="text-primary" :href="pkg.homepage" target="_blank" rel="noopener noreferrer">
+                <a class="text-primary" href="https://github.com/user/repo" target="_blank" rel="noopener noreferrer">
                   {{ $t('page.about.projectInfo.githubLink') }}
                 </a>
               </td>
@@ -82,7 +82,7 @@ const latestBuildTime = BUILD_TIME;
                 {{ $t('page.about.projectInfo.previewLink') }}
               </td>
               <td>
-                <a class="text-primary" :href="pkg.website" target="_blank" rel="noopener noreferrer">
+                <a class="text-primary" href="https://example.com" target="_blank" rel="noopener noreferrer">
                   {{ $t('page.about.projectInfo.previewLink') }}
                 </a>
               </td>

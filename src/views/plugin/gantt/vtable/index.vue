@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, shallowRef, watch } from 'vue';
 import * as VTableGantt from '@visactor/vtable-gantt';
 import * as VTable_editors from '@visactor/vtable-editors';
-import { useThemeStore } from '../../../../stores/modules/theme';
+import { useThemeStore } from '@/stores/modules/theme';
 import { basicGanttRecords, customGanttRecords, linkGanttRecords } from './data';
 
 const theme = useThemeStore();
@@ -779,18 +779,26 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <NSpace vertical :size="16">
-    <NCard :bordered="false" title="VTableGantt" class="h-full card-wrapper">
-      <WebSiteLink label="More Demos: " link="https://www.visactor.com/vtable/example" />
-    </NCard>
-    <NCard :bordered="false" class="h-full card-wrapper">
-      <div ref="basicGanttDomRef" class="relative h-400px"></div>
-    </NCard>
-    <NCard :bordered="false" class="h-full card-wrapper">
-      <div ref="linkGanttDomRef" class="relative h-400px"></div>
-    </NCard>
-    <NCard :bordered="false" class="h-full card-wrapper">
-      <div ref="customGanttDomRef" class="relative h-400px"></div>
-    </NCard>
-  </NSpace>
+  <div class="flex flex-col gap-4">
+    <VCard :bordered="false" title="VTableGantt" class="h-full">
+      <VCardText>
+        <WebSiteLink label="More Demos: " link="https://www.visactor.com/vtable/example" />
+      </VCardText>
+    </VCard>
+    <VCard :bordered="false" class="h-full">
+      <VCardText>
+        <div ref="basicGanttDomRef" class="relative h-400px"></div>
+      </VCardText>
+    </VCard>
+    <VCard :bordered="false" class="h-full">
+      <VCardText>
+        <div ref="linkGanttDomRef" class="relative h-400px"></div>
+      </VCardText>
+    </VCard>
+    <VCard :bordered="false" class="h-full">
+      <VCardText>
+        <div ref="customGanttDomRef" class="relative h-400px"></div>
+      </VCardText>
+    </VCard>
+  </div>
 </template>

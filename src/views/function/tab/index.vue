@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useTabStore } from '../../../stores/modules/tab';
+import { useTabStore } from '@/stores/modules/tab';
 import { useRouterPush } from '@/hooks/common/router';
 import { $t } from '@/locales';
 

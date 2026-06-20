@@ -39,7 +39,6 @@ function addNode() {
 
 function removeNode(id: string) {
   const { nodes, edges } = flowData.value;
-  // 删除node的同时，也需要删除包含NX的edge
   flowData.value = {
     nodes: nodes.filter(node => node.id !== id),
     edges: edges.filter(edge => edge.source !== id && edge.target !== id)
@@ -53,15 +52,17 @@ onMounted(() => {
 
 <template>
   <div class="h-full">
-    <NCard title="AntV G6 Next" :bordered="false" class="h-full card-wrapper">
-      <AntvFlow ref="antvFlowRef" :data="flowData" :selected="selectedNode" :behaviors="behaviors" />
-      <NDivider />
-      <NFlex>
-        <NButton @click="selectedNode = 'N5'">选中节点N5(需要自行处理选中事件，不会触发元素点击)</NButton>
-        <NButton v-if="!hasNodeN" @click="addNode">添加节点并与Node5连线</NButton>
-        <NButton v-else @click="() => removeNode('NN')">删除新添加的节点</NButton>
-        <NButton @click="() => removeNode('NX')">删除NodeX</NButton>
-      </NFlex>
-    </NCard>
+    <VCard title="AntV G6 Next" class="h-full">
+      <VCardText>
+        <AntvFlow ref="antvFlowRef" :data="flowData" :selected="selectedNode" :behaviors="behaviors" />
+        <VDivider class="my-4" />
+        <div class="flex gap-2 flex-wrap">
+          <VBtn @click="selectedNode = 'N5'">选中节点N5(需要自行处理选中事件，不会触发元素点击)</VBtn>
+          <VBtn v-if="!hasNodeN" @click="addNode">添加节点并与Node5连线</VBtn>
+          <VBtn v-else @click="() => removeNode('NN')">删除新添加的节点</VBtn>
+          <VBtn @click="() => removeNode('NX')">删除NodeX</VBtn>
+        </div>
+      </VCardText>
+    </VCard>
   </div>
 </template>

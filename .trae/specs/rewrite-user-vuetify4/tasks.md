@@ -49,6 +49,7 @@
   - [x] SubTask 7.4: 为 `index.vue` 编写测试：表格渲染、分页、行选择、编辑/删除交互
 
 # Task Dependencies
+
 - [Task 4] depends on [Task 1] — user-search 需要 useVuetifyPaginatedTable 的 getDataByPage
 - [Task 5] depends on [Task 1] — user-operate-drawer 需要 useTableOperate（已在 Task 1 中确认兼容）
 - [Task 6] depends on [Task 1, Task 2, Task 3] — index.vue 依赖 hook 和 TableHeaderOperation/TableColumnSetting 组件

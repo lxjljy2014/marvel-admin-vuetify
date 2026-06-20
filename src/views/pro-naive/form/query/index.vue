@@ -1,80 +1,56 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useMessage } from 'naive-ui';
-import type { ProSearchFormColumns } from 'pro-naive-ui';
-import { createProSearchForm } from 'pro-naive-ui';
 import { $t } from '@/locales';
-import ConfigProvider from '../../ConfigProvider.vue';
-
-interface Info {
-  appName: string;
-  appStatus: string;
-  createTime: number;
-  responseDate: number;
-  endTime: number;
-}
 
 const loading = ref(false);
 const loading2 = ref(false);
-const message = useMessage();
+const collapsed = ref(false);
 
-const form = createProSearchForm<Partial<Info>>({
-  onReset: () => {
-    message.success('reset success');
+interface SearchForm {
+  appName?: string;
+  appStatus?: string;
+  createTime?: string;
+  responseDate?: string;
+  endTime?: string;
+  [key: string]: string | undefined;
+}
+
+const searchForm = ref<SearchForm>({});
+const searchForm2 = ref<SearchForm>({});
+
+const searchColumns = computed(() => [
+  {
+    title: $t('page.proNaive.form.query.appName'),
+    key: 'appName',
+    type: 'text'
   },
-  onSubmit: async values => {
-    message.success(JSON.stringify(values));
-    loading.value = true;
-    await delay(1500);
-    loading.value = false;
-  }
-});
-
-const form2 = createProSearchForm<Partial<Info>>({
-  defaultCollapsed: true,
-  onReset: () => {
-    message.success('reset success');
+  {
+    title: $t('page.proNaive.form.query.createTime'),
+    key: 'createTime',
+    type: 'date'
   },
-  onSubmit: async values => {
-    message.success(JSON.stringify(values));
-    loading2.value = true;
-    await delay(1500);
-    loading2.value = false;
+  {
+    title: $t('page.proNaive.form.query.appStatus'),
+    key: 'appStatus',
+    type: 'text'
+  },
+  {
+    title: $t('page.proNaive.form.query.responseDate'),
+    key: 'responseDate',
+    type: 'datetime-local'
+  },
+  {
+    title: $t('page.proNaive.form.query.endDate'),
+    key: 'endTime',
+    type: 'date'
   }
-});
+]);
 
-const columns = computed<ProSearchFormColumns<Info>>(() => {
-  return [
-    {
-      title: $t('page.proNaive.form.query.appName'),
-      path: 'appName'
-    },
-    {
-      title: $t('page.proNaive.form.query.createTime'),
-      path: 'createTime',
-      field: 'date'
-    },
-    {
-      title: $t('page.proNaive.form.query.appStatus'),
-      path: 'appStatus'
-    },
-    {
-      title: $t('page.proNaive.form.query.responseDate'),
-      path: 'responseDate',
-      field: 'date-time'
-    },
-    {
-      title: $t('page.proNaive.form.query.endDate'),
-      path: 'endTime',
-      field: 'date'
-    }
-  ];
-});
-
-const columns2 = computed(() => {
+const searchColumns2 = computed(() => {
   return Array.from({ length: 20 }, (_, i) => ({
     title: `${$t('page.proNaive.form.query.field')}${i}`,
-    path: `field${i}`
+    key: `field${i}`,
+    type: 'text'
   }));
 });
 
@@ -83,17 +59,97 @@ function delay(time: number) {
     setTimeout(resolve, time);
   });
 }
+
+async function handleSearch() {
+  loading.value = true;
+  await delay(1500);
+  window.$message?.success(JSON.stringify(searchForm.value));
+  loading.value = false;
+}
+
+function handleReset() {
+  searchForm.value = {};
+}
+
+async function handleSearch2() {
+  loading2.value = true;
+  await delay(1500);
+  window.$message?.success(JSON.stringify(searchForm2.value));
+  loading2.value = false;
+}
+
+function handleReset2() {
+  searchForm2.value = {};
+}
 </script>
 
 <template>
-  <ConfigProvider>
-    <div class="bg-#fff">
-      <ProCard :title="$t('page.proNaive.form.query.title1')" :show-collapse="false">
-        <ProSearchForm :form="form" :loading="loading" :columns="columns" />
-      </ProCard>
-      <ProCard class="mt-12px" :title="$t('page.proNaive.form.query.title2')" :show-collapse="false">
-        <ProSearchForm :form="form2" :loading="loading2" :columns="columns2" :collapsed-rows="2" />
-      </ProCard>
-    </div>
-  </ConfigProvider>
+  <div>
+    <VCard :title="$t('page.proNaive.form.query.title1')" class="mb-4">
+      <VCardText>
+        <VForm @submit.prevent="handleSearch">
+          <VRow>
+            <VCol v-for="col in searchColumns" :key="col.key" cols="12" sm="6" md="4">
+              <VTextField
+                v-if="col.type === 'text'"
+                v-model="searchForm[col.key]"
+                :label="col.title"
+                variant="outlined"
+                density="comfortable"
+              />
+              <VTextField
+                v-else
+                v-model="searchForm[col.key]"
+                :label="col.title"
+                :type="col.type"
+                variant="outlined"
+                density="comfortable"
+              />
+            </VCol>
+          </VRow>
+
+          <div class="flex gap-2 mt-4">
+            <VBtn type="submit" color="primary" :loading="loading">
+              {{ $t('common.search') }}
+            </VBtn>
+            <VBtn variant="outlined" @click="handleReset">
+              {{ $t('common.reset') }}
+            </VBtn>
+          </div>
+        </VForm>
+      </VCardText>
+    </VCard>
+
+    <VCard :title="$t('page.proNaive.form.query.title2')">
+      <VCardText>
+        <VForm @submit.prevent="handleSearch2">
+          <VRow>
+            <VCol
+              v-for="col in searchColumns2.slice(0, collapsed ? 4 : searchColumns2.length)"
+              :key="col.key"
+              cols="12"
+              sm="6"
+              md="4"
+            >
+              <VTextField v-model="searchForm2[col.key]" :label="col.title" variant="outlined" density="comfortable" />
+            </VCol>
+          </VRow>
+
+          <div class="flex gap-2 mt-4">
+            <VBtn type="submit" color="primary" :loading="loading2">
+              {{ $t('common.search') }}
+            </VBtn>
+            <VBtn variant="outlined" @click="handleReset2">
+              {{ $t('common.reset') }}
+            </VBtn>
+            <VBtn variant="text" @click="collapsed = !collapsed">
+              {{ collapsed ? '展开' : '收起' }}
+            </VBtn>
+          </div>
+        </VForm>
+      </VCardText>
+    </VCard>
+  </div>
 </template>
+
+<style scoped></style>

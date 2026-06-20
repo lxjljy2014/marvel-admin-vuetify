@@ -1,6 +1,4 @@
 import { h } from 'vue';
-import { NTag } from 'naive-ui';
-import type { TagProps } from 'naive-ui';
 import type { CustomNodeData, NodeStatus } from './types';
 
 interface NodeStatusConfig {
@@ -78,19 +76,23 @@ export function getNodeIcon(node: CustomNodeData) {
   return nodeStatus[node.status][type];
 }
 
-export function getNodeStatusTag(state: NodeStatus, tagProperty?: TagProps) {
+export function getNodeStatusTag(state: NodeStatus, tagProperty?: Record<string, any>) {
   const { textColor, color, type } = nodeStatus[state] || {};
 
+  // Create a Vuetify chip/tag equivalent
   return h(
-    NTag,
+    'span',
     {
-      color: { textColor, color },
-      bordered: false,
-      size: 'small',
+      style: {
+        color: textColor,
+        backgroundColor: color,
+        borderRadius: '4px',
+        padding: '2px 8px',
+        fontSize: '12px',
+        display: 'inline-block'
+      },
       ...tagProperty
     },
-    {
-      default: () => type
-    }
+    type
   );
 }

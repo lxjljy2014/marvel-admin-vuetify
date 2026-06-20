@@ -1,17 +1,19 @@
 <script setup lang="tsx">
 import { computed } from 'vue';
-import { zhCN } from 'pro-naive-ui';
-import { useAppStore } from '../../stores/modules/app';
+import { useAppStore } from '@/stores/modules/app';
 
 const appStore = useAppStore();
 
-const locale = computed(() => {
-  return appStore.locale === 'zh-CN' ? zhCN : undefined;
+const currentLocale = computed(() => {
+  return appStore.locale === 'zh-CN' ? 'zh' : 'en';
 });
+
+// Export for potential child component usage
+defineExpose({ locale: currentLocale });
 </script>
 
 <template>
-  <ProConfigProvider :locale="locale" class="h-full">
+  <div class="h-full">
     <slot></slot>
-  </ProConfigProvider>
+  </div>
 </template>

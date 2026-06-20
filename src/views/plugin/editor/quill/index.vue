@@ -24,12 +24,12 @@ onMounted(() => {
 
 <template>
   <div class="h-full">
-    <NCard title="富文本插件" :bordered="false" class="card-wrapper">
-      <div ref="domRef" class="bg-white dark:bg-dark"></div>
-      <template #footer>
-        <GithubLink link="https://github.com/wangeditor-team/wangEditor" />
-      </template>
-    </NCard>
+    <VCard title="富文本插件" :bordered="false" class="card-wrapper">
+      <VCardText>
+        <div ref="domRef" class="bg-white dark:bg-dark"></div>
+      </VCardText>
+      <GithubLink link="https://github.com/wangeditor-team/wangEditor" />
+    </VCard>
   </div>
 </template>
 

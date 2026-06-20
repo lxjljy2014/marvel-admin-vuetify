@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { SimpleScrollbar } from '@sa/materials';
 import { GLOBAL_SIDER_MENU_ID } from '@/constants/app';
 import { useAppStore } from '@/stores/modules/app';
 import { useRouteStore } from '@/stores/modules/route';

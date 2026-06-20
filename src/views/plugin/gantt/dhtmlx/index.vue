@@ -178,30 +178,23 @@ onMounted(() => {
 
 <template>
   <div class="overflow-hidden lt-sm:overflow-auto">
-    <NCard
-      title="甘特图演示"
-      :bordered="false"
-      size="small"
-      content-class="overflow-y-hidden overflow-x-auto"
-      class="h-full card-wrapper"
-    >
-      <template #header-extra>
-        <NTabs
-          :value="timeType"
-          type="segment"
-          animated
-          size="small"
-          class="relative w-320px"
-          @update:value="changeTime"
+    <VCard title="甘特图演示" class="h-full">
+      <template #append>
+        <VTabs
+          v-model="timeType"
+          density="compact"
+          class="relative"
+          style="width: 320px"
+          @update:model-value="changeTime"
         >
-          <NTab v-for="item in data" :key="item.code" :name="item.code">
+          <VTab v-for="item in data" :key="item.code" :value="item.code">
             {{ item.name }}
-          </NTab>
-        </NTabs>
+          </VTab>
+        </VTabs>
       </template>
 
       <div ref="ganttRef" class="size-full min-w-800px"></div>
-    </NCard>
+    </VCard>
   </div>
 </template>
 

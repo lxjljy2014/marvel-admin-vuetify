@@ -85,7 +85,7 @@ defineExpose({ selectNode, graph: graphRef });
 <template>
   <div class="relative">
     <!-- 画布操作栏 -->
-    <div class="absolute left-0 right-0 z-1 flex items-stretch justify-between">
+    <div class="absolute left-0 right-0 z-1 d-flex align-stretch justify-space-between">
       <VBtnGroup density="compact" class="bg-white">
         <VBtn size="small" @click="zoomOut">
           <VIcon>mdi-magnify-minus</VIcon>
@@ -101,7 +101,7 @@ defineExpose({ selectNode, graph: graphRef });
         </VBtn>
       </VBtnGroup>
 
-      <div class="flex items-center gap-3">
+      <div class="d-flex align-center ga-3">
         <VMenu location="bottom end">
           <template #activator="{ props: menuProps }">
             <VBtn size="small" class="bg-white" v-bind="menuProps">
@@ -109,11 +109,21 @@ defineExpose({ selectNode, graph: graphRef });
             </VBtn>
           </template>
 
-          <VCard class="pa-4" style="min-width: 200px">
+          <VCard class="pa-4" style="min-width: 200px;">
             <div class="text-subtitle-2 mb-3">节点图例</div>
             <VRow dense>
-              <VCol v-for="(config, status) in nodeStatus" :key="status" cols="6" class="flex justify-center">
-                <VChip size="small" rounded :color="config.color" :style="{ color: config.textColor }">
+              <VCol
+                v-for="(config, status) in nodeStatus"
+                :key="status"
+                cols="6"
+                class="d-flex justify-center"
+              >
+                <VChip
+                  size="small"
+                  rounded
+                  :color="config.color"
+                  :style="{ color: config.textColor }"
+                >
                   <template #prepend>
                     <VIcon size="16" class="mr-1">
                       {{ status === 'MILESTONE' ? 'mdi-flag' : 'mdi-circle' }}

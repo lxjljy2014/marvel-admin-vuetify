@@ -8,7 +8,7 @@ defineProps<Props>();
 
 <template>
   <div class="h-full">
-    <iframe id="iframePage" class="size-full" :src="url"></iframe>
+    <iframe id="iframePage" class="size-full border-0" :src="url" frameborder="0"></iframe>
   </div>
 </template>
 

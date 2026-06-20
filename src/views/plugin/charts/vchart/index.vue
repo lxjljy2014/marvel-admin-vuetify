@@ -20,32 +20,55 @@ const { domRef: liquidChartSmartInvertRef } = useVChart(() => liquidChartSmartIn
 </script>
 
 <template>
-  <NSpace vertical :size="16">
-    <NCard :bordered="false" title="VChart" class="h-full card-wrapper">
-      <WebSiteLink label="More Demos: " link="https://www.visactor.com/vchart/example" />
-    </NCard>
-    <NCard title="Stacked Dash Area Chart" :bordered="false" class="h-full card-wrapper">
-      <div ref="stackedDashAreaRef" class="h-400px" />
-    </NCard>
-    <NCard title="Bar Mark Point Chart" :bordered="false" class="h-full card-wrapper">
-      <div ref="barMarkPointRef" class="h-400px" />
-    </NCard>
-    <NCard title="Histogram Different Bin Chart" :bordered="false" class="h-full card-wrapper">
-      <div ref="histogramDifferentBinRef" class="h-400px" />
-    </NCard>
-    <NCard title="Ranking Bar Chart" :bordered="false" class="h-full card-wrapper">
-      <div ref="rankingBarRef" class="h-400px" />
-    </NCard>
-    <NCard title="Circular Progress Tick Chart" :bordered="false" class="h-full card-wrapper">
-      <div ref="circularProgressTickRef" class="h-400px" />
-    </NCard>
-    <NCard title="Liquid Chart Smart Invert Chart" :bordered="false" class="h-full card-wrapper">
-      <div ref="liquidChartSmartInvertRef" class="h-400px" />
-    </NCard>
-    <NCard title="Shape Word Cloud Chart" :bordered="false" class="h-full card-wrapper">
-      <div ref="shapeWordCloudRef" class="h-400px" />
-    </NCard>
-  </NSpace>
+  <div class="flex flex-col gap-4">
+    <VCard title="VChart">
+      <VCardText>
+        <WebSiteLink label="More Demos: " link="https://www.visactor.com/vchart/example" />
+      </VCardText>
+    </VCard>
+
+    <VCard title="Stacked Dash Area Chart">
+      <VCardText>
+        <div ref="stackedDashAreaRef" class="h-400px" />
+      </VCardText>
+    </VCard>
+
+    <VCard title="Bar Mark Point Chart">
+      <VCardText>
+        <div ref="barMarkPointRef" class="h-400px" />
+      </VCardText>
+    </VCard>
+
+    <VCard title="Histogram Different Bin Chart">
+      <VCardText>
+        <div ref="histogramDifferentBinRef" class="h-400px" />
+      </VCardText>
+    </VCard>
+
+    <VCard title="Ranking Bar Chart">
+      <VCardText>
+        <div ref="rankingBarRef" class="h-400px" />
+      </VCardText>
+    </VCard>
+
+    <VCard title="Circular Progress Tick Chart">
+      <VCardText>
+        <div ref="circularProgressTickRef" class="h-400px" />
+      </VCardText>
+    </VCard>
+
+    <VCard title="Liquid Chart Smart Invert Chart">
+      <VCardText>
+        <div ref="liquidChartSmartInvertRef" class="h-400px" />
+      </VCardText>
+    </VCard>
+
+    <VCard title="Shape Word Cloud Chart">
+      <VCardText>
+        <div ref="shapeWordCloudRef" class="h-400px" />
+      </VCardText>
+    </VCard>
+  </div>
 </template>
 
 <style scoped></style>

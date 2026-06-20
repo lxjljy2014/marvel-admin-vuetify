@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 import Vditor from 'vditor';
 import 'vditor/dist/index.css';
-import { useThemeStore } from '../../../../stores/modules/theme';
+import { useThemeStore } from '@/stores/modules/theme';
 
 const theme = useThemeStore();
 
@@ -38,12 +38,12 @@ onUnmounted(() => {
 
 <template>
   <div class="h-full">
-    <NCard title="markdown插件" :bordered="false" class="card-wrapper">
-      <div ref="domRef"></div>
-      <template #footer>
-        <GithubLink link="https://github.com/Vanessa219/vditor" />
-      </template>
-    </NCard>
+    <VCard title="markdown插件" :bordered="false" class="card-wrapper">
+      <VCardText>
+        <div ref="domRef"></div>
+      </VCardText>
+      <GithubLink link="https://github.com/Vanessa219/vditor" />
+    </VCard>
   </div>
 </template>
 

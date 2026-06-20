@@ -2,9 +2,9 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLoading } from '@sa/hooks';
-import { useAppStore } from '../../../stores/modules/app';
-import { useAuthStore } from '../../../stores/modules/auth';
-import { useTabStore } from '../../../stores/modules/tab';
+import { useAppStore } from '@/stores/modules/app';
+import { useAuthStore } from '@/stores/modules/auth';
+import { useTabStore } from '@/stores/modules/tab';
 import { useAuth } from '@/hooks/business/auth';
 import { $t } from '@/locales';
 

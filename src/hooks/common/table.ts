@@ -285,7 +285,7 @@ export function useTableOperate<TableData, K extends keyof TableData = keyof Tab
 ) {
   const { bool: drawerVisible, setTrue: openDrawer, setFalse: closeDrawer } = useBoolean();
 
-  const operateType = shallowRef<NaiveUI.TableOperateType>('add');
+  const operateType = shallowRef<'add' | 'edit'>('add');
 
   function handleAdd() {
     operateType.value = 'add';
