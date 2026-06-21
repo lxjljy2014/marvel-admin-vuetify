@@ -70,7 +70,7 @@ const selectAllModel = computed({
 <template>
   <VMenu v-model="menuVisible" :close-on-content-click="false" location="bottom end">
     <template #activator="{ props: activatorProps }">
-      <VBtn variant="outlined" v-bind="activatorProps">
+      <VBtn variant="outlined" color="primary" size="small" v-bind="activatorProps">
         <template #prepend>
           <VIcon icon="mdi-cog-outline"></VIcon>
         </template>

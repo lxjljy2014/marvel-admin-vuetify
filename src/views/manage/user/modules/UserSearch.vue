@@ -51,13 +51,13 @@ async function search() {
 </script>
 
 <template>
-  <VCard class="card-wrapper">
+  <VCard>
     <VExpansionPanels v-model="panel" static elevation="0">
-      <VExpansionPanel value="user-search">
+      <VExpansionPanel value="user-search" :hover="false">
         <VExpansionPanelTitle>{{ $t('common.search') }}</VExpansionPanelTitle>
         <VExpansionPanelText>
           <VForm ref="formRef" v-model="valid">
-            <VRow>
+            <VRow dense>
               <VCol cols="12" sm="6" md="3">
                 <VTextField
                   v-model="model.userName"
@@ -140,9 +140,9 @@ async function search() {
               </VCol>
               <VCol cols="12" sm="6" md="6">
                 <div class="flex gap-2 justify-end">
-                  <VBtn variant="outlined" @click="reset">
+                  <VBtn variant="outlined" color="warning" @click="reset">
                     <template #prepend>
-                      <VIcon icon="mdi-refresh" />
+                      <VIcon icon="mdi-restore" />
                     </template>
                     {{ $t('common.reset') }}
                   </VBtn>

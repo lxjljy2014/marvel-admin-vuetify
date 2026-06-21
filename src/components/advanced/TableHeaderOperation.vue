@@ -46,7 +46,7 @@ function refresh() {
   <div class="flex flex-wrap gap-2 justify-end lt-sm:w-200px">
     <slot name="prefix"></slot>
     <slot name="default">
-      <VBtn variant="outlined" color="primary" @click="add">
+      <VBtn variant="outlined" color="primary" size="small" @click="add">
         <template #prepend>
           <VIcon icon="mdi-plus" />
         </template>
@@ -54,7 +54,7 @@ function refresh() {
       </VBtn>
       <VDialog v-model="deleteDialogVisible" max-width="400">
         <template #activator="{ props: activatorProps }">
-          <VBtn variant="outlined" color="error" :disabled="disabledDelete" v-bind="activatorProps">
+          <VBtn variant="outlined" color="error" size="small" :disabled="disabledDelete" v-bind="activatorProps">
             <template #prepend>
               <VIcon icon="mdi-delete" />
             </template>
@@ -71,7 +71,7 @@ function refresh() {
         </VCard>
       </VDialog>
     </slot>
-    <VBtn variant="outlined" @click="refresh">
+    <VBtn variant="outlined" color="primary" size="small" @click="refresh">
       <template #prepend>
         <VIcon icon="mdi-refresh" :class="{ 'animate-spin': loading }" />
       </template>
