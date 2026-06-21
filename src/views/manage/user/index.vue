@@ -27,7 +27,13 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, pagination
   },
   columns: () => [
     { key: 'index', title: $t('common.index'), align: 'center', width: 80, sortable: false },
-    { key: 'userName', title: $t('page.manage.user.userName'), align: 'center', minWidth: 100, sortable: false },
+    {
+      key: 'userName',
+      title: $t('page.manage.user.userName'),
+      align: 'center',
+      minWidth: 100,
+      sortable: false
+    },
     { key: 'userGender', title: $t('page.manage.user.userGender'), align: 'center', width: 100, sortable: false },
     { key: 'nickName', title: $t('page.manage.user.nickName'), align: 'center', minWidth: 100, sortable: false },
     { key: 'userPhone', title: $t('page.manage.user.userPhone'), align: 'center', width: 120, sortable: false },

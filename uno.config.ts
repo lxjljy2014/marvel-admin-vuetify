@@ -1,4 +1,4 @@
-import { defineConfig, presetWind4, transformerDirectives } from 'unocss';
+import { defineConfig, presetWind4, transformerDirectives, transformerVariantGroup } from 'unocss';
 import * as breakpoints from './src/theme/breakpoints';
 import { presetSoybeanAdmin } from '@sa/uno-preset';
 import { themeVars } from './src/theme/vars';
@@ -16,7 +16,7 @@ export default defineConfig({
     }),
     presetSoybeanAdmin()
   ],
-  transformers: [transformerDirectives()],
+  transformers: [transformerDirectives(), transformerVariantGroup()],
   theme: {
     ...themeVars,
     breakpoint: breakpoints.forUnoCSS,

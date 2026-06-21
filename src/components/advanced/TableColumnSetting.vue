@@ -68,7 +68,7 @@ const selectAllModel = computed({
 </script>
 
 <template>
-  <VMenu v-model="menuVisible" :close-on-content-click="false" location="bottom end">
+  <VMenu v-model="menuVisible" :close-on-content-click="false" location="bottom end" z-index="2000">
     <template #activator="{ props: activatorProps }">
       <VBtn variant="outlined" color="primary" size="small" v-bind="activatorProps">
         <template #prepend>
@@ -77,8 +77,8 @@ const selectAllModel = computed({
         {{ $t('common.columnSetting') }}
       </VBtn>
     </template>
-    <VCard min-width="240">
-      <div class="pa-2">
+    <VSheet min-width="240" elevation="5">
+      <VCardTitle>
         <VCheckbox
           v-model="selectAllModel"
           :indeterminate="selectAllIndeterminate"
@@ -86,9 +86,9 @@ const selectAllModel = computed({
           :label="$t('common.selectAll')"
           density="compact"
           hide-details
-          class="flex-1"
+          color="primary"
         />
-      </div>
+      </VCardTitle>
       <VDivider />
       <VueDraggable
         v-model="columns"
@@ -104,7 +104,13 @@ const selectAllModel = computed({
         >
           <div class="h-full flex-y-center flex-1 rd-4px hover:(bg-primary bg-opacity-20)">
             <VIcon icon="mdi-drag" class="mr-8px h-full cursor-move text-icon" />
-            <VCheckbox v-model="item.checked" density="compact" hide-details class="none_draggable flex-1">
+            <VCheckbox
+              v-model="item.checked"
+              density="compact"
+              color="primary"
+              hide-details
+              class="none_draggable flex-1"
+            >
               <template #label>
                 <template v-if="typeof item.title === 'function'">
                   <component :is="item.title" />
@@ -114,18 +120,34 @@ const selectAllModel = computed({
             </VCheckbox>
           </div>
           <ButtonIcon
+            v-if="item.fixed === 'unFixed'"
             :disabled="!item.checked"
             :focusable="false"
             :tooltip-content="$t(tooltipRecord[item.fixed!])"
+            icon="mdi-pin"
+            rotate="45"
             @click="handleFixed(item)"
-          >
-            <VIcon v-if="item.fixed === 'unFixed'" icon="mdi-pin" />
-            <VIcon v-else-if="item.fixed === 'left'" icon="mdi-pin" class="rotate-270" />
-            <VIcon v-else icon="mdi-pin-off" />
-          </ButtonIcon>
+          ></ButtonIcon>
+          <ButtonIcon
+            v-else-if="item.fixed === 'left'"
+            :disabled="!item.checked"
+            :focusable="false"
+            :tooltip-content="$t(tooltipRecord[item.fixed!])"
+            icon="mdi-pin"
+            rotate="-45"
+            @click="handleFixed(item)"
+          ></ButtonIcon>
+          <ButtonIcon
+            v-else
+            :disabled="!item.checked"
+            :focusable="false"
+            :tooltip-content="$t(tooltipRecord[item.fixed!])"
+            icon="mdi-pin-off"
+            @click="handleFixed(item)"
+          ></ButtonIcon>
         </div>
       </VueDraggable>
-    </VCard>
+    </VSheet>
   </VMenu>
 </template>
 

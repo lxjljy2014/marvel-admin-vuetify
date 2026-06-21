@@ -111,7 +111,7 @@ const applyPreset = (preset: ThemePreset): void => {
     <div
       v-for="preset in presets"
       :key="preset.id"
-      class="border border-primary/10 rounded-lg border-solid bg-white/5 p-3 backdrop-blur-10 transition-all duration-300 hover:(shadow-md -translate-y-0.5)"
+      class="border border-primary/10 rounded-lg border-solid bg-white/5 p-3 backdrop-blur-10 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
     >
       <div class="mb-2 flex items-center justify-between">
         <div class="min-w-0 w-full flex flex-1 items-center justify-between gap-2">

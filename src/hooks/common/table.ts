@@ -173,10 +173,20 @@ function getColumnChecks(
   }));
 }
 
-function getColumns(headers: DataTableHeader[], checks: TableColumnCheck[]): DataTableHeader[] {
-  const headerMap = new Map(headers.map(h => [h.key, h]));
-  return checks
-    .filter(c => c.checked)
-    .map(c => headerMap.get(c.key)!)
-    .filter(Boolean);
+function getColumns<Column extends DataTableHeader<any>>(
+  cols: Column[],
+  checks: TableColumnCheck[]
+): DataTableHeader[] {
+  const columnMap = new Map(cols.map(h => [h.key, h]));
+
+  const filteredColumns = checks
+    .filter(item => item.checked)
+    .map(check => {
+      return {
+        ...columnMap.get(check.key),
+        fixed: check.fixed !== 'unFixed' ? (check.fixed === 'left' ? 'start' : 'end') : undefined
+      } as Column;
+    });
+
+  return filteredColumns;
 }
