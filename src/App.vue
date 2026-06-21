@@ -14,6 +14,8 @@ const themeStore = useThemeStore();
       VAppBarNavIcon: { size: 40 }
     }"
   >
-    <RouterView />
+    <AppProvider>
+      <RouterView />
+    </AppProvider>
   </VDefaultsProvider>
 </template>

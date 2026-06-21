@@ -3,7 +3,8 @@ import { reactive } from 'vue';
 import { utils, writeFile } from 'xlsx';
 import { enableStatusRecord, userGenderRecord } from '@/constants/business';
 import { fetchGetUserList } from '@/service/api';
-import { useVuetifyPaginatedTable, defaultTransform, type VuetifyTableHeader } from '@/hooks/common/table';
+import { useVuetifyPaginatedTable, defaultTransform } from '@/hooks/common/table';
+import type { DataTableHeader } from 'vuetify';
 import { $t } from '@/locales';
 
 const searchParams = reactive<Api.SystemManage.UserSearchParams>({
@@ -17,7 +18,7 @@ const searchParams = reactive<Api.SystemManage.UserSearchParams>({
   userEmail: null
 });
 
-const { headers, data, loading, serverItems, itemsLength, serverPagination, onLoad } = useVuetifyPaginatedTable({
+const { columns, data, loading, pagination } = useVuetifyPaginatedTable({
   api: () => fetchGetUserList(searchParams),
   transform: response => defaultTransform(response),
   onPaginationParamsChange: params => {
@@ -36,11 +37,11 @@ const { headers, data, loading, serverItems, itemsLength, serverPagination, onLo
 });
 
 function exportExcel() {
-  const exportHeaders = headers.value.slice(1);
+  const exportHeaders = columns.value.slice(1);
 
-  const excelList = data.value.map(item => exportHeaders.map(h => getTableValue(h, item)));
+  const excelList = data.value.map(item => exportHeaders.map((h: DataTableHeader) => getTableValue(h, item)));
 
-  const titleList = exportHeaders.map(h => h.title || null);
+  const titleList = exportHeaders.map((h: DataTableHeader) => h.title || null);
 
   excelList.unshift(titleList);
 
@@ -48,8 +49,8 @@ function exportExcel() {
 
   const workSheet = utils.aoa_to_sheet(excelList);
 
-  workSheet['!cols'] = exportHeaders.map(h => ({
-    width: Math.round((h.width || h.minWidth || 120) / 10 || 20)
+  workSheet['!cols'] = exportHeaders.map((h: DataTableHeader) => ({
+    width: Math.round(Number(h.width || h.minWidth || 120) / 10 || 20)
   }));
 
   utils.book_append_sheet(workBook, workSheet, '用户列表');
@@ -57,7 +58,7 @@ function exportExcel() {
   writeFile(workBook, '用户数据.xlsx');
 }
 
-function getTableValue(header: VuetifyTableHeader, item: Api.SystemManage.User) {
+function getTableValue(header: DataTableHeader, item: Api.SystemManage.User) {
   const { key } = header;
 
   if (key === 'status') {
@@ -68,7 +69,7 @@ function getTableValue(header: VuetifyTableHeader, item: Api.SystemManage.User) 
     return (item.userGender && $t(userGenderRecord[item.userGender])) || null;
   }
 
-  return (item as Record<string, any>)[key] || null;
+  return (item as Record<string, any>)[key as string] || null;
 }
 </script>
 
@@ -89,19 +90,20 @@ function getTableValue(header: VuetifyTableHeader, item: Api.SystemManage.User) 
       <VCardText class="flex-grow flex-col">
         <VSheet border class="flex-grow flex-col">
           <VDataTableServer
-            :headers="headers"
-            :items="serverItems"
-            :items-length="itemsLength"
+            :headers="columns"
+            :items="data"
+            :items-length="pagination.itemCount"
             :loading="loading ? 'primary' : false"
-            :page="serverPagination.page"
-            :items-per-page="serverPagination.itemsPerPage"
+            :page="pagination.page"
+            :items-per-page="pagination.pageSize"
             :items-per-page-options="[10, 15, 20, 25, 30]"
             fixed-header
             item-value="id"
             gridlines="all"
             density="comfortable"
             class="flex-grow [&_.v-table__wrapper]:flex-basis-0!"
-            @update:options="onLoad"
+            @update:page="pagination.onUpdatePage"
+            @update:items-per-page="pagination.onUpdatePageSize"
           >
             <template #item.index="{ index }">
               {{ index + 1 }}

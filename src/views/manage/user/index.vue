@@ -18,18 +18,7 @@ const searchParams = ref<Api.SystemManage.UserSearchParams>({
   userEmail: null
 });
 
-const {
-  headers,
-  columnChecks,
-  data,
-  getData,
-  getDataByPage,
-  loading,
-  serverItems,
-  itemsLength,
-  serverPagination,
-  onLoad
-} = useVuetifyPaginatedTable({
+const { columns, columnChecks, data, getData, getDataByPage, loading, pagination } = useVuetifyPaginatedTable({
   api: () => fetchGetUserList(searchParams.value),
   transform: response => defaultTransform(response),
   onPaginationParamsChange: params => {
@@ -94,12 +83,12 @@ function edit(id: number) {
         <VSheet border class="flex-grow flex-col">
           <VDataTableServer
             v-model="checkedRowKeys"
-            :headers="headers"
-            :items="serverItems"
-            :items-length="itemsLength"
+            :headers="columns"
+            :items="data"
+            :items-length="pagination.itemCount"
             :loading="loading ? 'primary' : false"
-            :page="serverPagination.page"
-            :items-per-page="serverPagination.itemsPerPage"
+            :page="pagination.page"
+            :items-per-page="pagination.pageSize"
             :items-per-page-options="[10, 15, 20, 25, 30]"
             fixed-header
             show-select
@@ -108,7 +97,8 @@ function edit(id: number) {
             gridlines="all"
             density="comfortable"
             class="flex-grow [&_.v-table\_\_wrapper]:flex-basis-0!"
-            @update:options="onLoad"
+            @update:page="pagination.onUpdatePage"
+            @update:items-per-page="pagination.onUpdatePageSize"
           >
             <template #header.data-table-select="{ allSelected, selectAll, someSelected }">
               <VCheckboxBtn

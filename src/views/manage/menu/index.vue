@@ -8,18 +8,7 @@ import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/SvgIcon.vue';
 import MenuOperateModal, { type OperateType } from './modules/MenuOperateModal.vue';
 
-const {
-  headers,
-  columnChecks,
-  data,
-  getData,
-  getDataByPage,
-  loading,
-  serverItems,
-  itemsLength,
-  serverPagination,
-  onLoad
-} = useVuetifyPaginatedTable({
+const { columns, columnChecks, data, getData, getDataByPage, loading, pagination } = useVuetifyPaginatedTable({
   api: () => fetchGetMenuList(),
   transform: response => defaultTransform(response),
   columns: () => [
@@ -115,12 +104,12 @@ init();
         <VSheet border class="flex-grow flex-col">
           <VDataTableServer
             v-model="checkedRowKeys"
-            :headers="headers"
-            :items="serverItems"
-            :items-length="itemsLength"
+            :headers="columns"
+            :items="data"
+            :items-length="pagination.itemCount"
             :loading="loading ? 'primary' : false"
-            :page="serverPagination.page"
-            :items-per-page="serverPagination.itemsPerPage"
+            :page="pagination.page"
+            :items-per-page="pagination.pageSize"
             :items-per-page-options="[10, 15, 20, 25, 30]"
             fixed-header
             show-select
@@ -129,7 +118,8 @@ init();
             gridlines="all"
             density="comfortable"
             class="flex-grow [&_.v-table\_\_wrapper]:flex-basis-0!"
-            @update:options="onLoad"
+            @update:page="pagination.onUpdatePage"
+            @update:items-per-page="pagination.onUpdatePageSize"
           >
             <template #header.data-table-select="{ allSelected, selectAll, someSelected }">
               <VCheckboxBtn

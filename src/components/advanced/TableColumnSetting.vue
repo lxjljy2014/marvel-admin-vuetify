@@ -94,7 +94,7 @@ const selectAllModel = computed({
         v-model="columns"
         :animation="150"
         filter=".none_draggable"
-        class="column-setting-scroll max-h-[200px] overflow-y-auto pa-2"
+        class="column-setting-scroll max-h-[240px] overflow-y-auto pa-2"
       >
         <div
           v-for="item in columns"
