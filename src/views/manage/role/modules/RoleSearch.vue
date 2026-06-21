@@ -18,7 +18,7 @@ const emit = defineEmits<Emits>();
 
 const { formRef, valid, validate, restoreValidation } = useVuetifyForm();
 
-const panel = ref(['role-search']);
+const panel = ref([]);
 
 const model = defineModel<Api.SystemManage.RoleSearchParams>('model', { required: true });
 

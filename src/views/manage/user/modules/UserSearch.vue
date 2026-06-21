@@ -18,7 +18,7 @@ const emit = defineEmits<Emits>();
 
 const { formRef, valid, validate, restoreValidation } = useVuetifyForm();
 
-const panel = ref(['user-search']);
+const panel = ref([]);
 
 const model = defineModel<Api.SystemManage.UserSearchParams>('model', { required: true });
 
