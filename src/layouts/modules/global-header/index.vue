@@ -50,7 +50,7 @@ function handleSwitch(e: PointerEvent) {
         <VAppBarNavIcon @click="appStore.toggleRail()"></VAppBarNavIcon>
         <GlobalLogo v-if="showLogo" class="h-full" :style="{ width: themeStore.sider.width + 'px' }" />
         <div v-if="showMenu" :id="GLOBAL_HEADER_MENU_ID" class="h-full flex-y-center flex-1-hidden"></div>
-        <div v-else class="h-full flex-y-center flex-1-hidden">
+        <div v-else class="h-full flex-y-center">
           <GlobalBreadcrumb v-if="!appStore.isMobile" class="ml-12px" />
         </div>
         <VSpacer></VSpacer>
