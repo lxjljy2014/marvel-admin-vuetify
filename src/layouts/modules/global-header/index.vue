@@ -47,9 +47,9 @@ function handleSwitch(e: PointerEvent) {
   <VAppBar density="comfortable" :extended="!appStore.fullContent" :height="appStore.fullContent ? '52' : undefined">
     <template #default>
       <div v-show="!appStore.fullContent" class="w-full flex items-center justify-between">
-        <VAppBarNavIcon @click="appStore.toggleRail()"></VAppBarNavIcon>
+        <VAppBarNavIcon v-if="showMenuToggler" @click="appStore.toggleRail()"></VAppBarNavIcon>
         <GlobalLogo v-if="showLogo" class="h-full" :style="{ width: themeStore.sider.width + 'px' }" />
-        <div v-if="showMenu" :id="GLOBAL_HEADER_MENU_ID" class="h-full flex-y-center flex-1-hidden"></div>
+        <div v-if="showMenu" :id="GLOBAL_HEADER_MENU_ID" class="h-full flex-y-center"></div>
         <div v-else class="h-full flex-y-center">
           <GlobalBreadcrumb v-if="!appStore.isMobile" class="ml-12px" />
         </div>
