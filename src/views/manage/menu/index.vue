@@ -112,12 +112,13 @@ init();
             :items-per-page="pagination.pageSize"
             :items-per-page-options="[10, 15, 20, 25, 30]"
             fixed-header
+            height="0"
             show-select
             select-strategy="page"
             item-value="id"
             gridlines="all"
             density="comfortable"
-            class="flex-grow [&_.v-table\_\_wrapper]:flex-basis-0!"
+            class="flex-grow"
             @update:page="pagination.onUpdatePage"
             @update:items-per-page="pagination.onUpdatePageSize"
           >
